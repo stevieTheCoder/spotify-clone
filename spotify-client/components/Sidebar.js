@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/outline";
 
 function Sidebar() {
+  const dummyMultiplier = 15;
   return (
     <div className="p-5 text-sm text-gray-500 border-r border-gray-900">
       <div className="space-y-4">
@@ -39,7 +40,11 @@ function Sidebar() {
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
 
-        {/* Playlists will be rendered here */}
+        {[...Array(dummyMultiplier)].map((e, i) => (
+          <p className="cursor-pointer hover:text-white" key={i}>
+            Playlist name...
+          </p>
+        ))}
       </div>
     </div>
   );
