@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import SpofityProvider from "next-auth/providers/spofity";
-<<<<<<< HEAD
 import spotifyApi, { LOGIN_URL } from "../../../lib/spotify";
 
 refreshAccessToken = async (token) => {
@@ -24,8 +23,6 @@ refreshAccessToken = async (token) => {
     };
   }
 };
-=======
->>>>>>> 5ad77e8e1f62fe7934ba11ad7e1b10a4623128e5
 
 export default NextAuth({
   providers: [
@@ -35,7 +32,6 @@ export default NextAuth({
       authorization: LOGIN_URL,
     }),
   ],
-<<<<<<< HEAD
   secret: process.env.JWT_SECRET,
   pages: {
     signIn: "/login",
@@ -62,6 +58,4 @@ export default NextAuth({
       return await refreshAccessToken(token);
     },
   },
-=======
->>>>>>> 5ad77e8e1f62fe7934ba11ad7e1b10a4623128e5
 });
