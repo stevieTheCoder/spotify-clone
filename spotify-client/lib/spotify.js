@@ -29,3 +29,5 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 export default spotifyApi;
+
+export { LOGIN_URL };
