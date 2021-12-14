@@ -8,14 +8,24 @@ import {
   LogoutIcon,
 } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import useSpotify from "../hooks/useSpotify";
 
 function Sidebar() {
   const { data: session, status } = useSession();
+  const [playlists, setPlaylists] = useState([]);
+  const spotifyApi = useSpotify();
 
-  console.log(session);
-  const dummyMultiplier = 15;
+  useEffect(() => {
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi.getUserPlaylists().then((data) => {
+        setPlaylists(data.body.items);
+      });
+    }
+  }, [session, spotifyApi]);
+
   return (
-    <div className="h-screen p-5 overflow-y-scroll text-sm text-gray-500 border-r border-gray-900 scrollbar-hide">
+    <div className="h-screen max-w-xs p-5 overflow-y-scroll text-sm text-gray-500 border-r border-gray-900 scrollbar-hide">
       <div className="space-y-4">
         <button
           className="flex items-center space-x-2 hover:text-white"
@@ -52,9 +62,9 @@ function Sidebar() {
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
 
-        {[...Array(dummyMultiplier)].map((e, i) => (
-          <p className="cursor-pointer hover:text-white" key={i}>
-            Playlist name...
+        {playlists.map((playlist) => (
+          <p className="cursor-pointer hover:text-white" key={playlist.id}>
+            {playlist.name}
           </p>
         ))}
       </div>
