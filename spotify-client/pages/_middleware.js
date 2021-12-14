@@ -7,6 +7,11 @@ export async function middleware(req) {
 
   const { pathname } = req.nextUrl;
 
+  // Redirect to home page if accessing login when already authenticated
+  if (pathname.includes("/login") && token) {
+    return NextResponse.redirect("/");
+  }
+
   // Allow request if request for session & provider is fetching or if token exists
   if (pathname.includes("/api/auth" || token)) {
     return NextResponse.next();
