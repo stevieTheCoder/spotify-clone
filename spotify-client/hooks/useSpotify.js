@@ -11,18 +11,16 @@ export default function useSpotify() {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (session) {
-      // If refresh access token fails, redirect user to login
-      if (session.error === "RefreshAccessTokenError") {
-        signIn();
-      }
+    if (!session) return;
+    if (status === "loading") return;
 
-      if (status === "authenticated") {
-        spotifyApi.setAccessToken(session.accessToken);
-        console.log("Set access token", session.accessToken);
-      }
+    // If refresh access token fails, redirect user to login
+    if (session.error === "RefreshAccessTokenError") {
+      signIn();
     }
+
+    spotifyApi.setAccessToken(session.accessToken);
   }, [session, status]);
 
-  return spotifyApi;
+  return { spotifyApi };
 }

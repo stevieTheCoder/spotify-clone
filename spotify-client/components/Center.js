@@ -10,29 +10,26 @@ import Tracks from "./Tracks";
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 
 export default function Center() {
+  const { spotifyApi } = useSpotify();
   const { data: session, status } = useSession();
-  const spotifyApi = useSpotify();
   const [colour, setColor] = useState(null);
   const playlistId = useRecoilValue(playlistIdState);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
 
-  console.log(playlistId);
   useEffect(() => {
     setColor(shuffle(colours)[0]);
   }, [playlistId]);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      spotifyApi
-        .getPlaylist(playlistId)
-        .then((data) => {
-          setPlaylist(data.body);
-        })
-        .catch((err) => console.log("Something went wrong!", err));
-    }
-  }, [status, spotifyApi, playlistId]);
+    if (status === "loading") return;
 
-  console.log(playlist);
+    spotifyApi
+      .getPlaylist(playlistId)
+      .then((data) => {
+        setPlaylist(data.body);
+      })
+      .catch((err) => console.log("Something went wrong!", err));
+  }, [status, spotifyApi, playlistId]);
 
   const image =
     session?.user?.image ??

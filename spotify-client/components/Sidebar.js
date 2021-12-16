@@ -14,18 +14,17 @@ import { playlistIdState } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
 
 function Sidebar() {
-  const { data: session, status } = useSession();
   const [playlists, setPlaylists] = useState([]);
-  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
-  const spotifyApi = useSpotify();
+  const [, setPlaylistId] = useRecoilState(playlistIdState);
+  const { spotifyApi } = useSpotify();
+  const { status } = useSession();
 
   useEffect(() => {
-    if (spotifyApi.getAccessToken()) {
-      spotifyApi.getUserPlaylists().then((data) => {
-        setPlaylists(data.body.items);
-      });
-    }
-  }, [session, spotifyApi]);
+    if (status === "loading") return;
+    spotifyApi.getUserPlaylists().then((data) => {
+      setPlaylists(data.body.items);
+    });
+  }, [status, spotifyApi]);
 
   return (
     <div className="hidden h-screen md:inline-flex sm:max-w-[12rem] lg:max-w-[15rem] p-5 overflow-y-scroll text-xs text-gray-500 border-r border-gray-900 lg:text-sm scrollbar-hide">
