@@ -61,9 +61,7 @@ export default function Center() {
         </div>
       </section>
 
-      <div>
-        <Tracks />
-      </div>
+      <div>{playlist ? <Tracks playlist={playlist} /> : <p>Loading...</p>}</div>
     </div>
   );
 }
