@@ -10,7 +10,7 @@ import Tracks from "./Tracks";
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 
 export default function Center() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const spotifyApi = useSpotify();
   const [colour, setColor] = useState(null);
   const playlistId = useRecoilValue(playlistIdState);
@@ -22,13 +22,15 @@ export default function Center() {
   }, [playlistId]);
 
   useEffect(() => {
-    spotifyApi
-      .getPlaylist(playlistId)
-      .then((data) => {
-        setPlaylist(data.body);
-      })
-      .catch((err) => console.log("Something went wrong!", err));
-  }, [session, spotifyApi, playlistId]);
+    if (status === "authenticated") {
+      spotifyApi
+        .getPlaylist(playlistId)
+        .then((data) => {
+          setPlaylist(data.body);
+        })
+        .catch((err) => console.log("Something went wrong!", err));
+    }
+  }, [status, spotifyApi, playlistId]);
 
   console.log(playlist);
 

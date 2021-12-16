@@ -40,6 +40,7 @@ export default NextAuth({
     async jwt({ token, account, user }) {
       // Initial sign in
       if (account && user) {
+        console.log(">> INITIAL SIGN IN");
         return {
           ...token,
           accessToken: account.access_token,
@@ -51,17 +52,19 @@ export default NextAuth({
 
       // Return previous token if the access token has not expired
       if (Date.now() < token.accessTokenExpires) {
+        console.log(">> PREVIOUS TOKEN OK");
         return token;
       }
 
+      console.log(">> ACCESS TOKEN EXPIRED");
       // Access token has expired, need to refresh
       return await refreshAccessToken(token);
     },
 
     async session({ session, token }) {
-      session.user.accessToken = token.accessToken;
-      session.user.refreshToken = token.refreshToken;
-      session.user.username = token.username;
+      session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+      session.username = token.username;
 
       return session;
     },
