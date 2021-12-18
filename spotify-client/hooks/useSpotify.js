@@ -1,6 +1,6 @@
 import { useSession, signIn } from "next-auth/react";
 import SpotifyWebApi from "spotify-web-api-node";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 
@@ -9,7 +9,7 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
 });
 
-export default function useSpotify() {
+const useSpotify = () => {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
 
@@ -25,7 +25,7 @@ export default function useSpotify() {
   }, [session, isAuthenticated]);
 
   return { spotifyApi, isAuthenticated };
-}
+};
 
 export const useSpotifyUserPlaylists = () => {
   const [userPlaylists, setUserPlaylists] = useState([]);
