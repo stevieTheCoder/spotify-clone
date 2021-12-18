@@ -1,6 +1,6 @@
 import { useSession, signIn } from "next-auth/react";
 import SpotifyWebApi from "spotify-web-api-node";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 
@@ -11,10 +11,10 @@ const spotifyApi = new SpotifyWebApi({
 
 export default function useSpotify() {
   const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   useEffect(() => {
-    if (!session) return;
-    if (status === "loading") return;
+    if (!isAuthenticated) return;
 
     // If refresh access token fails, redirect user to login
     if (session.error === "RefreshAccessTokenError") {
@@ -22,22 +22,17 @@ export default function useSpotify() {
     }
 
     spotifyApi.setAccessToken(session.accessToken);
-  }, [session, status]);
+  }, [session, isAuthenticated]);
 
-  return { spotifyApi };
+  return { spotifyApi, isAuthenticated };
 }
 
 export const useSpotifyUserPlaylists = () => {
   const [userPlaylists, setUserPlaylists] = useState([]);
-  const { data: session, status } = useSession();
-  const isLoading = status === "loading";
+  const { spotifyApi, isAuthenticated } = useSpotify();
 
   useEffect(() => {
-    if (!session) return;
-    if (isLoading) return;
-
-    spotifyApi.setAccessToken(session.accessToken);
-
+    if (!isAuthenticated) return;
     const fetchUserPlaylists = async () => {
       try {
         const response = await spotifyApi.getUserPlaylists();
@@ -48,7 +43,7 @@ export const useSpotifyUserPlaylists = () => {
     };
 
     fetchUserPlaylists();
-  }, [status, session, spotifyApi]);
+  }, [spotifyApi, isAuthenticated]);
 
   return userPlaylists;
 };
@@ -56,14 +51,10 @@ export const useSpotifyUserPlaylists = () => {
 export const useSpotifyPlaylist = () => {
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const [playlist, setPlaylist] = useState(null);
-  const { data: session, status } = useSession();
-  const isLoading = status === "loading";
+  const { spotifyApi, isAuthenticated } = useSpotify();
 
   useEffect(() => {
-    if (!session) return;
-    if (isLoading) return;
-
-    spotifyApi.setAccessToken(session.accessToken);
+    if (!isAuthenticated) return;
 
     if (playlistId === null) {
       const fetchPlaylistId = async () => {
@@ -95,7 +86,7 @@ export const useSpotifyPlaylist = () => {
 
       fetchPlaylist(playlistId);
     }
-  }, [playlistId, status, spotifyApi]);
+  }, [playlistId, spotifyApi, isAuthenticated]);
 
   return playlist;
 };
