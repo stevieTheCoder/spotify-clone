@@ -2,54 +2,28 @@ import { ChevronDownIcon } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { playlistState, playlistIdState } from "../atoms/playlistAtom";
-import useSpotify from "../hooks/useSpotify";
+import { useRecoilValue } from "recoil";
+import { playlistIdState } from "../atoms/playlistAtom";
+import { useSpotifyPlaylist } from "../hooks/useSpotify";
 import Tracks from "./Tracks";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 
 export default function Center() {
-  const { spotifyApi } = useSpotify();
-  const { data: session, status } = useSession();
+  const playlist = useSpotifyPlaylist();
+  const { data: session } = useSession();
   const [colour, setColor] = useState(null);
-  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
-  const [playlist, setPlaylist] = useRecoilState(playlistState);
+  const playlistId = useRecoilValue(playlistIdState);
 
   useEffect(() => {
     setColor(shuffle(colours)[0]);
   }, [playlistId]);
 
-  // First load ensure playlistId exists
-  useEffect(() => {
-    if (status === "loading") return;
-    if (playlistId == null) {
-      spotifyApi
-        .getFeaturedPlaylists({ limit: 1, offset: 0, country: "GB" })
-        .then((data) => {
-          setPlaylistId(data.body.playlists.items[0].id);
-        })
-        .catch((err) => console.log("Something went wrong!", err));
-    }
-  }, [status, spotifyApi]);
-
-  useEffect(() => {
-    if (status === "loading") return;
-    if (playlistId == null) return;
-
-    spotifyApi
-      .getPlaylist(playlistId)
-      .then((data) => {
-        setPlaylist(data.body);
-      })
-      .catch((err) => console.log("Something went wrong!", err));
-  }, [status, spotifyApi, playlistId]);
-
   const image =
     session?.user?.image ??
     "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
 
-  if (playlistId == null) return <div></div>;
+  if (playlist === null) return <div></div>;
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
