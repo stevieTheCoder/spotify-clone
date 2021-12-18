@@ -13,15 +13,29 @@ export default function Center() {
   const { spotifyApi } = useSpotify();
   const { data: session, status } = useSession();
   const [colour, setColor] = useState(null);
-  const playlistId = useRecoilValue(playlistIdState);
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
 
   useEffect(() => {
     setColor(shuffle(colours)[0]);
   }, [playlistId]);
 
+  // First load ensure playlistId exists
   useEffect(() => {
     if (status === "loading") return;
+    if (playlistId == null) {
+      spotifyApi
+        .getFeaturedPlaylists({ limit: 1, offset: 0, country: "GB" })
+        .then((data) => {
+          setPlaylistId(data.body.playlists.items[0].id);
+        })
+        .catch((err) => console.log("Something went wrong!", err));
+    }
+  }, [status, spotifyApi]);
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (playlistId == null) return;
 
     spotifyApi
       .getPlaylist(playlistId)
@@ -35,6 +49,8 @@ export default function Center() {
     session?.user?.image ??
     "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
 
+  if (playlistId == null) return <div></div>;
+
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
@@ -44,7 +60,7 @@ export default function Center() {
             className="object-cover w-10 h-10 rounded-full"
             alt="user image"
           />
-          <h2>{session?.user.name}</h2>
+          <h2>{session?.user?.name}</h2>
           <ChevronDownIcon className="w-5 h-5" />
         </div>
       </header>
