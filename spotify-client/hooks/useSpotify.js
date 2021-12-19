@@ -3,6 +3,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
+import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
@@ -25,6 +26,22 @@ const useSpotify = () => {
   }, [session, isAuthenticated]);
 
   return { spotifyApi, isAuthenticated };
+};
+
+export const usePlaySpotifyTrack = () => {
+  const { spotifyApi } = useSpotify();
+  const [, setCurrentTrackId] = useRecoilState(currentTrackIdState);
+  const [, setIsPlaying] = useRecoilState(isPlayingState);
+
+  const playSpotifyTrack = async (trackId, trackUri) => {
+    setCurrentTrackId(trackId);
+    setIsPlaying(true);
+    await spotifyApi.play({
+      uris: [trackUri],
+    });
+  };
+
+  return { playSpotifyTrack };
 };
 
 export const useSpotifyUserPlaylists = () => {
