@@ -11,13 +11,11 @@ function Track({ order, track }) {
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>
-        <div>
-          <img
-            className="w-10 h-10"
-            src={track?.album.images[0]?.url}
-            alt="album art"
-          />
-        </div>
+        <img
+          className="w-10 h-10"
+          src={track?.album.images[0]?.url}
+          alt="album art"
+        />
         <div>
           <p className="text-white truncate w-36 lg:w-64">{track.name}</p>
           <p className="w-40">{track.artists[0].name}</p>
