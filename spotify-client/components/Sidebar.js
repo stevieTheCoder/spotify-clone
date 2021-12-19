@@ -5,9 +5,7 @@ import {
   PlusCircleIcon,
   HeartIcon,
   RssIcon,
-  LogoutIcon,
 } from "@heroicons/react/outline";
-import { signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 import { useSpotifyUserPlaylists } from "../hooks/useSpotify";
@@ -17,7 +15,7 @@ function Sidebar() {
   const userPlaylists = useSpotifyUserPlaylists();
 
   return (
-    <div className="hidden h-screen md:inline-flex sm:max-w-[12rem] lg:max-w-[15rem] p-5 overflow-y-scroll text-xs text-gray-500 border-r border-gray-900 lg:text-sm scrollbar-hide">
+    <div className="hidden h-screen md:inline-flex sm:max-w-[12rem] lg:max-w-[15rem] p-5 overflow-y-scroll text-xs text-gray-500 border-r border-gray-900 lg:text-sm scrollbar-hide pb-36">
       <div className="space-y-4">
         <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="w-5 h-5" />

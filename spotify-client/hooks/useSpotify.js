@@ -28,14 +28,100 @@ const useSpotify = () => {
   return { spotifyApi, isAuthenticated };
 };
 
+export const useSpotifyTrackInfo = () => {
+  const { spotifyApi, isAuthenticated } = useSpotify();
+  const [currentTrackId, setCurrentTrackId] =
+    useRecoilState(currentTrackIdState);
+  const [, setIsPlaying] = useRecoilState(isPlayingState);
+  const [trackInfo, setTrackInfo] = useState(null);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    if (!currentTrackId) {
+      const fetchCurrentPlayingTrack = async () => {
+        try {
+          const response = await spotifyApi.getMyCurrentPlayingTrack();
+          setCurrentTrackId(response.body.item.id);
+        } catch (err) {
+          console.log("Something went wrong!", err);
+        }
+      };
+
+      fetchCurrentPlayingTrack();
+    }
+
+    if (currentTrackId) {
+      const fetchTrackInfo = async () => {
+        try {
+          const response = await spotifyApi.getTrack(currentTrackId);
+          setTrackInfo(response.body);
+        } catch (err) {
+          console.log("Something went wrong!", err);
+        }
+      };
+
+      fetchTrackInfo();
+    }
+
+    const fetchIsPlaying = async () => {
+      try {
+        const response = await spotifyApi.getMyCurrentPlaybackState(
+          currentTrackId
+        );
+        setIsPlaying(response.body.is_playing);
+      } catch (err) {
+        console.log("Something went wrong!", err);
+      }
+    };
+
+    fetchIsPlaying();
+  }, [currentTrackId, spotifyApi, isAuthenticated]);
+
+  return trackInfo;
+};
+
+export const useSpotifyTogglePlayPause = () => {
+  const { spotifyApi } = useSpotify();
+  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+  const [currentTrackId] = useRecoilState(currentTrackIdState);
+
+  const togglePlayPause = async () => {
+    try {
+      const response = await spotifyApi.getMyCurrentPlaybackState(
+        currentTrackId
+      );
+      setIsPlaying(response.body.is_playing);
+    } catch (err) {
+      console.log("Something went wrong!", err);
+    }
+
+    if (!isPlaying) {
+      try {
+        await spotifyApi.play();
+        setIsPlaying(true);
+      } catch (err) {
+        console.log("Something went wrong!", err);
+      }
+    } else {
+      try {
+        await spotifyApi.pause();
+        setIsPlaying(false);
+      } catch (err) {
+        console.log("Something went wrong!", err);
+      }
+    }
+  };
+
+  return { togglePlayPause };
+};
+
 export const usePlaySpotifyTrack = () => {
   const { spotifyApi } = useSpotify();
   const [, setCurrentTrackId] = useRecoilState(currentTrackIdState);
-  const [, setIsPlaying] = useRecoilState(isPlayingState);
 
   const playSpotifyTrack = async (trackId, trackUri) => {
     setCurrentTrackId(trackId);
-    setIsPlaying(true);
     await spotifyApi.play({
       uris: [trackUri],
     });
