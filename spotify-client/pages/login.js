@@ -15,7 +15,7 @@ export default function Login({ providers }) {
     <div className="flex flex-col items-center justify-center w-full min-h-screen bg-black">
       <img
         className="mb-5 w-52"
-        src="https:/links.papareact.com/9xl"
+        src="https://links.papareact.com/9xl"
         alt="spotify logo"
       />
 
