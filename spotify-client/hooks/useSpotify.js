@@ -28,6 +28,20 @@ const useSpotify = () => {
   return { spotifyApi, isAuthenticated };
 };
 
+export const useSpotifyVolume = () => {
+  const { spotifyApi, isAuthenticated } = useSpotify();
+
+  const setSpotifyVolume = async (volume) => {
+    try {
+      await spotifyApi.setVolume(volume);
+    } catch (err) {
+      console.log("Something went wrong!", err);
+    }
+  };
+
+  return { setSpotifyVolume, isAuthenticated };
+};
+
 export const useSpotifyTrackInfo = () => {
   const { spotifyApi, isAuthenticated } = useSpotify();
   const [currentTrackId, setCurrentTrackId] =
@@ -42,7 +56,7 @@ export const useSpotifyTrackInfo = () => {
       const fetchCurrentPlayingTrack = async () => {
         try {
           const response = await spotifyApi.getMyCurrentPlayingTrack();
-          setCurrentTrackId(response.body.item.id);
+          setCurrentTrackId(response.body?.item.id);
         } catch (err) {
           console.log("Something went wrong!", err);
         }
@@ -69,7 +83,7 @@ export const useSpotifyTrackInfo = () => {
         const response = await spotifyApi.getMyCurrentPlaybackState(
           currentTrackId
         );
-        setIsPlaying(response.body.is_playing);
+        setIsPlaying(response.body?.is_playing ?? false);
       } catch (err) {
         console.log("Something went wrong!", err);
       }
@@ -119,12 +133,18 @@ export const useSpotifyTogglePlayPause = () => {
 export const usePlaySpotifyTrack = () => {
   const { spotifyApi } = useSpotify();
   const [, setCurrentTrackId] = useRecoilState(currentTrackIdState);
+  const [, setIsPlaying] = useRecoilState(isPlayingState);
 
   const playSpotifyTrack = async (trackId, trackUri) => {
-    setCurrentTrackId(trackId);
-    await spotifyApi.play({
-      uris: [trackUri],
-    });
+    try {
+      await spotifyApi.play({
+        uris: [trackUri],
+      });
+      setIsPlaying(true);
+      setCurrentTrackId(trackId);
+    } catch (err) {
+      console.log("Something went wrong!", err);
+    }
   };
 
   return { playSpotifyTrack };
