@@ -5,6 +5,8 @@ export async function middleware(req) {
   // Token will exist if user is logged in
   const token = await getToken({ req, secret: process.env.JWT_SECRET });
 
+  console.log(token);
+
   const { pathname } = req.nextUrl;
 
   // Redirect to home page if accessing login when already authenticated
