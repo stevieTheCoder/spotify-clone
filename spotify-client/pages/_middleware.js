@@ -9,20 +9,20 @@ export async function middleware(req) {
 
   console.log(">> Here is the token", token);
 
-  const { pathname } = req.nextUrl;
+  // const { pathname } = req.nextUrl;
 
-  // Redirect to home page if accessing login when already authenticated
-  if (pathname.includes("/login") && token) {
-    return NextResponse.redirect("/");
-  }
+  // // Redirect to home page if accessing login when already authenticated
+  // if (pathname.includes("/login") && token) {
+  //   return NextResponse.redirect("/");
+  // }
 
-  // Allow request if request for session & provider is fetching or if token exists
-  if (pathname.includes("/api/auth" || token)) {
-    return NextResponse.next();
-  }
+  // // Allow request if request for session & provider is fetching or if token exists
+  // if (pathname.includes("/api/auth" || token)) {
+  //   return NextResponse.next();
+  // }
 
-  // Redirect to login if user is trying to access protected route and has not been authenticated
-  if (!token && pathname !== "/login") {
-    return NextResponse.redirect("/login");
-  }
+  // // Redirect to login if user is trying to access protected route and has not been authenticated
+  // if (!token && pathname !== "/login") {
+  //   return NextResponse.redirect("/login");
+  // }
 }
