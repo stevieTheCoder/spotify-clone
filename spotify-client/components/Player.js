@@ -91,7 +91,7 @@ function Player() {
           <VolumeDownIcon />
         </PlayerButton>
         <input
-          className="h-1 w-14 md:w-28"
+          className="w-14 md:w-28"
           type="range"
           value={volume}
           min={0}
