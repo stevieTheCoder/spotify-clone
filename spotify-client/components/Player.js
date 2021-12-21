@@ -31,19 +31,19 @@ function Player() {
   const [volume, setVolume] = useSpotifyVolume();
 
   return (
-    <div className="grid h-24 grid-cols-3 px-2 text-xs text-white bg-gradient-to-b from-black to-gray-900 md:text-base md:px-8">
+    <div className="flex flex-col justify-between px-6 py-4 text-xs text-white min-h-44 md:min-h-24 md:grid md:grid-cols-3 bg-gradient-to-b from-black to-gray-900 md:text-base">
       {/*Left */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center pt-2 space-x-4 md:pt-0">
         {trackInfo && (
           <>
             <img
-              className="hidden w-10 h-10 md:inline"
+              className="w-10 h-10"
               src={trackInfo?.album.images?.[0]?.url}
               alt="album art"
             />
             <div>
               <h3>{trackInfo?.name}</h3>
-              <p>{trackInfo?.artists?.[0]?.name}</p>
+              <p className="text-gray-500">{trackInfo?.artists?.[0]?.name}</p>
             </div>
           </>
         )}
@@ -69,7 +69,7 @@ function Player() {
       </div>
 
       {/* Right */}
-      <div className="flex items-center justify-end space-x-3 md:space-x-4">
+      <div className="flex items-center justify-center space-x-2 md:justify-end md:space-x-4">
         <PlayerButton
           callback={() =>
             volume > 0 && setVolume((cur) => cur - VOLUME_INCREMENT)
@@ -78,7 +78,7 @@ function Player() {
           <VolumeDownIcon />
         </PlayerButton>
         <input
-          className="w-14 md:w-28"
+          className="w-full max-w-xs md:w-min"
           type="range"
           value={volume}
           min={0}
