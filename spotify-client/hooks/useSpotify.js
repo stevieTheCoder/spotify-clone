@@ -1,9 +1,10 @@
 import { useSession, signIn } from "next-auth/react";
 import SpotifyWebApi from "spotify-web-api-node";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
+import { debounce } from "lodash";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
@@ -30,16 +31,26 @@ const useSpotify = () => {
 
 export const useSpotifyVolume = () => {
   const { spotifyApi, isAuthenticated } = useSpotify();
+  const [volume, setVolume] = useState(100);
 
-  const setSpotifyVolume = async (volume) => {
-    try {
-      await spotifyApi.setVolume(volume);
-    } catch (err) {
-      console.log("Something went wrong!", err);
-    }
-  };
+  const debounceSetVolume = useCallback(
+    debounce(async (value) => {
+      try {
+        await spotifyApi.setVolume(value);
+      } catch (err) {
+        console.log("Something went wrong!", err);
+      }
+    }, 200),
+    []
+  );
 
-  return { setSpotifyVolume, isAuthenticated };
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    debounceSetVolume(volume);
+  }, [volume, isAuthenticated]);
+
+  return [volume, setVolume];
 };
 
 export const useSpotifyTrackInfo = () => {

@@ -25,23 +25,10 @@ import PlayerButton from "./PlayerButton";
 const VOLUME_INCREMENT = 10;
 
 function Player() {
-  const [volume, setVolume] = useState(100);
   const trackInfo = useSpotifyTrackInfo();
   const isPlaying = useRecoilValue(isPlayingState);
   const { togglePlayPause } = useSpotifyTogglePlayPause();
-  const { setSpotifyVolume, isAuthenticated } = useSpotifyVolume();
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    debounceSetVolume(volume);
-  }, [volume, isAuthenticated]);
-
-  const debounceSetVolume = useCallback(
-    debounce(async (value) => {
-      await setSpotifyVolume(value);
-    }, 500),
-    []
-  );
+  const [volume, setVolume] = useSpotifyVolume();
 
   return (
     <div className="grid h-24 grid-cols-3 px-2 text-xs text-white bg-gradient-to-b from-black to-gray-900 md:text-base md:px-8">
