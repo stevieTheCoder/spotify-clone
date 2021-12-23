@@ -2,28 +2,29 @@ import { ChevronDownIcon } from "@heroicons/react/outline";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
-import { useRecoilValue } from "recoil";
-import { playlistIdState } from "../atoms/playlistAtom";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 
 export default function Center() {
-  const playlist = useSpotifySelectedPlaylist();
+  const {
+    isLoading,
+    isIdle,
+    isError,
+    data: playlist,
+    error,
+  } = useSpotifySelectedPlaylist();
   const { data: session } = useSession();
   const [colour, setColor] = useState(null);
-  const playlistId = useRecoilValue(playlistIdState);
 
   useEffect(() => {
     setColor(shuffle(colours)[0]);
-  }, [playlistId]);
+  }, [playlist]);
 
   const image =
     session?.user?.image ??
     "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
-
-  if (playlist === null) return <div></div>;
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -54,7 +55,13 @@ export default function Center() {
         </div>
       </section>
 
-      <div>{playlist ? <Tracks playlist={playlist} /> : <p>Loading...</p>}</div>
+      {isLoading || isIdle ? (
+        <span>Loading</span>
+      ) : isError ? (
+        <span>Error {error}</span>
+      ) : (
+        <Tracks playlist={playlist} />
+      )}
     </div>
   );
 }
