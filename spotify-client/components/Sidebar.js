@@ -12,7 +12,23 @@ import { useSpotifyUserPlaylists } from "../hooks/spotify";
 
 function Sidebar() {
   const [, setPlaylistId] = useRecoilState(playlistIdState);
-  const userPlaylists = useSpotifyUserPlaylists();
+  const {
+    isLoading,
+    isIdle,
+    isError,
+    data: userPlaylists,
+    error,
+  } = useSpotifyUserPlaylists();
+
+  if (isLoading || isIdle) {
+    return <span className="text-white">Loading...</span>;
+  }
+
+  if (isError) {
+    return <span className="text-white">Error {error}</span>;
+  }
+
+  console.log(userPlaylists);
 
   return (
     <div className="hidden h-screen md:inline-flex sm:max-w-[12rem] lg:max-w-[15rem] p-5 overflow-y-scroll text-xs text-gray-500 border-r border-gray-900 lg:text-sm scrollbar-hide pb-36">
