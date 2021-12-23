@@ -20,16 +20,6 @@ function Sidebar() {
     error,
   } = useSpotifyUserPlaylists();
 
-  if (isLoading || isIdle) {
-    return <span className="text-white">Loading...</span>;
-  }
-
-  if (isError) {
-    return <span className="text-white">Error {error}</span>;
-  }
-
-  console.log(userPlaylists);
-
   return (
     <div className="hidden h-screen md:inline-flex sm:max-w-[12rem] lg:max-w-[15rem] p-5 overflow-y-scroll text-xs text-gray-500 border-r border-gray-900 lg:text-sm scrollbar-hide pb-36">
       <div className="space-y-4">
@@ -61,15 +51,21 @@ function Sidebar() {
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
 
-        {userPlaylists.map((playlist) => (
-          <p
-            className="cursor-pointer hover:text-white"
-            key={playlist.id}
-            onClick={() => setPlaylistId(playlist.id)}
-          >
-            {playlist.name}
-          </p>
-        ))}
+        {isLoading || isIdle ? (
+          <span>Loading</span>
+        ) : isError ? (
+          <span>Error {error}</span>
+        ) : (
+          userPlaylists.map((playlist) => (
+            <p
+              className="cursor-pointer hover:text-white"
+              key={playlist.id}
+              onClick={() => setPlaylistId(playlist.id)}
+            >
+              {playlist.name}
+            </p>
+          ))
+        )}
       </div>
     </div>
   );
