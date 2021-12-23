@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/outline";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
-import { useSpotifyUserPlaylists } from "../hooks/useSpotify";
+import { useSpotifyUserPlaylists } from "../hooks/spotify";
 
 function Sidebar() {
   const [, setPlaylistId] = useRecoilState(playlistIdState);

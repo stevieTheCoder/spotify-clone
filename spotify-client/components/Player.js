@@ -11,15 +11,13 @@ import {
   VolumeUpIcon,
   SwitchHorizontalIcon,
 } from "@heroicons/react/solid";
-import { debounce } from "lodash";
-import { useCallback, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isPlayingState } from "../atoms/songAtom";
 import {
   useSpotifyTogglePlayPause,
   useSpotifyTrackInfo,
   useSpotifyVolume,
-} from "../hooks/useSpotify";
+} from "../hooks/spotify";
 import PlayerButton from "./PlayerButton";
 
 const VOLUME_INCREMENT = 10;
@@ -78,7 +76,7 @@ function Player() {
           <VolumeDownIcon />
         </PlayerButton>
         <input
-          className="w-full max-w-xs md:w-min"
+          className="w-full max-w-xs border-cyan-50 md:w-min"
           type="range"
           value={volume}
           min={0}

@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
 import { useRecoilValue } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
-import { useSpotifyPlaylist } from "../hooks/useSpotify";
+import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 
 export default function Center() {
-  const playlist = useSpotifyPlaylist();
+  const playlist = useSpotifySelectedPlaylist();
   const { data: session } = useSession();
   const [colour, setColor] = useState(null);
   const playlistId = useRecoilValue(playlistIdState);

@@ -1,8 +1,8 @@
-import { usePlaySpotifyTrack } from "../hooks/useSpotify";
+import { useSpotifyPlayTrack } from "../hooks/spotify";
 import millisecondsToMinutesAndSeconds from "../lib/time";
 
 function Track({ order, track }) {
-  const { playSpotifyTrack } = usePlaySpotifyTrack();
+  const { playSpotifyTrack } = useSpotifyPlayTrack();
 
   return (
     <div
