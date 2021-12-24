@@ -4,7 +4,7 @@ import { shuffle } from "lodash";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 import UserHeader from "./UserHeader";
-import { SkeletonImage } from "./skeletons";
+import { SkeletonImage, SkeletonTracks } from "./skeletons";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 const defaultUserImage =
@@ -54,11 +54,13 @@ export default function Center() {
       </section>
 
       {isLoading || isIdle ? (
-        <span>Loading...</span>
+        <SkeletonTracks />
       ) : isError ? (
         <span>Error {error}</span>
       ) : (
-        <Tracks tracks={playlist.tracks} />
+        <>
+          <Tracks tracks={playlist.tracks} />
+        </>
       )}
     </div>
   );
