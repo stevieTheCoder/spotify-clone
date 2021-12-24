@@ -1,9 +1,9 @@
-import { ChevronDownIcon } from "@heroicons/react/outline";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
+import UserHeader from "./UserHeader";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 
@@ -29,18 +29,11 @@ export default function Center() {
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
-        <div
-          className="flex items-center p-1 pr-2 space-x-3 text-white bg-black rounded-full cursor-pointer opacity-90 hover:opacity-80"
-          onClick={signOut}
-        >
-          <img
-            src={image}
-            className="object-cover w-10 h-10 rounded-full"
-            alt="user image"
-          />
-          <h2>{session?.user?.name}</h2>
-          <ChevronDownIcon className="w-5 h-5" />
-        </div>
+        <UserHeader
+          name={session?.user?.name}
+          image={image}
+          callback={signOut}
+        />
       </header>
 
       <section
