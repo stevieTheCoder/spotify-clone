@@ -4,7 +4,7 @@ import { shuffle } from "lodash";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 import UserHeader from "./UserHeader";
-import { SkeletonImage, SkeletonTracks } from "./skeletons";
+import { SkeletonHeaderSection, SkeletonTracks } from "./skeletons";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 const defaultUserImage =
@@ -41,16 +41,21 @@ export default function Center() {
         className={`flex items-end space-x-7 bg-gradient-to-b to-black ${colour} h-80 text-white p-8`}
       >
         {isLoading || isIdle ? (
-          <SkeletonImage />
+          <SkeletonHeaderSection />
         ) : (
-          <img className="shadow-2xl h-44 w-44" src={playlist.images[0].url} />
+          <>
+            <img
+              className="shadow-2xl h-44 w-44"
+              src={playlist.images[0].url}
+            />
+            <div>
+              <p>PLAYLIST</p>
+              <h2 className="text-2xl font-bold md:text-3xl xl:text-5xl">
+                {playlist?.name}
+              </h2>
+            </div>
+          </>
         )}
-        <div>
-          <p>PLAYLIST</p>
-          <h2 className="text-2xl font-bold md:text-3xl xl:text-5xl">
-            {playlist?.name}
-          </h2>
-        </div>
       </section>
 
       {isLoading || isIdle ? (
