@@ -9,6 +9,7 @@ import {
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 import { useSpotifyUserPlaylists } from "../hooks/spotify";
+import { SkeletonSideBar } from "./skeletons";
 
 function Sidebar() {
   const [, setPlaylistId] = useRecoilState(playlistIdState);
@@ -52,7 +53,7 @@ function Sidebar() {
         <hr className="border-t-[0.1px] border-gray-900" />
 
         {isLoading || isIdle ? (
-          <span>Loading</span>
+          <SkeletonSideBar />
         ) : isError ? (
           <span>Error {error}</span>
         ) : (

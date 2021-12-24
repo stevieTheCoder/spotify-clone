@@ -4,8 +4,11 @@ import { shuffle } from "lodash";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 import UserHeader from "./UserHeader";
+import { SkeletonImage } from "./skeletons";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
+const defaultUserImage =
+  "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
 
 export default function Center() {
   const {
@@ -22,16 +25,14 @@ export default function Center() {
     setColor(shuffle(colours)[0]);
   }, [playlist]);
 
-  const image =
-    session?.user?.image ??
-    "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
+  const userImage = session?.user?.image ?? defaultUserImage;
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
         <UserHeader
           name={session?.user?.name}
-          image={image}
+          image={userImage}
           callback={signOut}
         />
       </header>
@@ -39,7 +40,11 @@ export default function Center() {
       <section
         className={`flex items-end space-x-7 bg-gradient-to-b to-black ${colour} h-80 text-white p-8`}
       >
-        <img className="shadow-2xl h-44 w-44" src={playlist?.images?.[0].url} />
+        {isLoading || isIdle ? (
+          <SkeletonImage />
+        ) : (
+          <img className="shadow-2xl h-44 w-44" src={playlist.images[0].url} />
+        )}
         <div>
           <p>PLAYLIST</p>
           <h2 className="text-2xl font-bold md:text-3xl xl:text-5xl">
@@ -49,7 +54,7 @@ export default function Center() {
       </section>
 
       {isLoading || isIdle ? (
-        <span>Loading</span>
+        <span>Loading...</span>
       ) : isError ? (
         <span>Error {error}</span>
       ) : (
