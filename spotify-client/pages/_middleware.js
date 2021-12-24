@@ -10,7 +10,6 @@ export async function middleware(req) {
       process.env.NEXTAUTH_URL?.startsWith("https://") ??
       !!process.env.VERCEL_URL,
   });
-  console.log("token", token);
 
   const { pathname } = req.nextUrl;
 

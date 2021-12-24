@@ -60,7 +60,7 @@ export default function Center() {
       ) : isError ? (
         <span>Error {error}</span>
       ) : (
-        <Tracks playlist={playlist} />
+        <Tracks tracks={playlist.tracks} />
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../../atoms/playlistAtom";
 import useSpotify from "./useSpotify";
@@ -39,7 +39,7 @@ const useSpotifySelectedPlaylist = () => {
     ["playlists", playlistId],
     () => fetchPlaylist(playlistId),
     {
-      enabled: !!playlistId && isAuthenticated,
+      enabled: isAuthenticated && !!playlistId,
       staleTime: 600000,
     }
   );
