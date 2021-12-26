@@ -28,7 +28,7 @@ function Sidebar() {
   const { prefetchPlaylist } = useSpotifySelectedPlaylist();
   const { handleOnMouseOver, handleOnMouseLeave } = useDebounceMouseOver(
     prefetchPlaylist,
-    500
+    200
   );
 
   return (

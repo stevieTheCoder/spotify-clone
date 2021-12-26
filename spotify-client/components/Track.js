@@ -7,7 +7,7 @@ function Track({ order, track }) {
   const { prefetchTrackInfo } = useSpotifyTrackInfo();
   const { handleOnMouseOver, handleOnMouseLeave } = useDebounceMouseOver(
     prefetchTrackInfo,
-    500
+    200
   );
 
   return (
