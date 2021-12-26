@@ -1,33 +1,12 @@
-import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { playlistIdState } from "../../atoms/playlistAtom";
 import useSpotify from "./useSpotify";
 import { useQuery, useQueryClient } from "react-query";
 
 const useSpotifySelectedPlaylist = () => {
-  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const playlistId = useRecoilValue(playlistIdState);
   const { spotifyApi } = useSpotify();
   const queryClient = useQueryClient();
-
-  // Fetch default playlist id if one has not been selected
-  useEffect(() => {
-    if (playlistId !== null) return;
-
-    const fetchFeaturedPlaylistId = async () => {
-      try {
-        const response = await spotifyApi.getFeaturedPlaylists({
-          limit: 1,
-          offset: 0,
-          country: "GB",
-        });
-        setPlaylistId(response.body.playlists.items[0].id);
-      } catch (err) {
-        console.log("Something went wrong!", err);
-      }
-    };
-
-    fetchFeaturedPlaylistId();
-  }, [spotifyApi, playlistId]);
 
   const fetchPlaylist = async (id) => {
     const response = await spotifyApi.getPlaylist(id);

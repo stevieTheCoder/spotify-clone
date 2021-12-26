@@ -31,3 +31,17 @@ const spotifyApi = new SpotifyWebApi({
 export default spotifyApi;
 
 export { LOGIN_URL };
+
+export const fetchFeaturedPlaylistId = async () => {
+  try {
+    const response = await spotifyApi.getFeaturedPlaylists({
+      limit: 1,
+      offset: 0,
+      country: "GB",
+    });
+
+    return response.body.playlists.items[0].id;
+  } catch (err) {
+    console.log("Something went wrong!", err);
+  }
+};

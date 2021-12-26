@@ -3,26 +3,27 @@ import { RecoilRoot } from "recoil";
 import useFixMobileHeight from "../hooks/useFixMobileHeight";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../styles/globals.css";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { useEffect } from "react";
-
-const queryClient = new QueryClient();
+import { QueryClient, QueryClientProvider, Hydrate } from "react-query";
+import { useEffect, useState } from "react";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  const [queryClient] = useState(() => new QueryClient());
   useFixMobileHeight();
 
   return (
     <SessionProvider session={session}>
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
-          {Component.auth ? (
-            <Auth>
+          <Hydrate state={pageProps.dehydratedState}>
+            {Component.auth ? (
+              <Auth>
+                <Component {...pageProps} />
+              </Auth>
+            ) : (
               <Component {...pageProps} />
-            </Auth>
-          ) : (
-            <Component {...pageProps} />
-          )}
-          <ReactQueryDevtools initialIsOpen={false} />
+            )}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </Hydrate>
         </QueryClientProvider>
       </RecoilRoot>
     </SessionProvider>

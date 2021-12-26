@@ -46,7 +46,7 @@ function Center() {
           <>
             <img
               className="shadow-2xl h-44 w-44"
-              src={playlist.images[0].url}
+              src={playlist?.images[0].url}
             />
             <div>
               <p>PLAYLIST</p>
