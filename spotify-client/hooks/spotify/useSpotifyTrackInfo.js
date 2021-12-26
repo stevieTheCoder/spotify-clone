@@ -1,14 +1,20 @@
 import useSpotify from "./useSpotify";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import useSpotifyGetCurrentlyPlaying from "./useSpotifyGetCurrentlyPlaying";
 
 const useSpotifyTrackInfo = () => {
   const { spotifyApi, isAuthenticated } = useSpotify();
   const { data: currentlyPlayingTrackId } = useSpotifyGetCurrentlyPlaying();
+  const queryClient = useQueryClient();
 
   const fetchTrackInfo = async (id) => {
     const response = await spotifyApi.getTrack(id);
-    return response.body;
+    return {
+      trackId: response.body.id,
+      albumSrc: response.body.album.images[0].url,
+      artist: response.body.artists[0].name,
+      name: response.body.name,
+    };
   };
 
   const { isIdle, isLoading, isError, data, error } = useQuery(
@@ -16,11 +22,21 @@ const useSpotifyTrackInfo = () => {
     () => fetchTrackInfo(currentlyPlayingTrackId),
     {
       enabled: isAuthenticated && !!currentlyPlayingTrackId,
-      staleTime: 600000,
+      staleTime: 60000,
     }
   );
 
-  return { isIdle, isLoading, isError, data, error };
+  const prefetchTrackInfo = async (idToPrefetch) => {
+    await queryClient.prefetchQuery(
+      ["trackInfo", idToPrefetch],
+      () => fetchTrackInfo(idToPrefetch),
+      {
+        staleTime: 60000,
+      }
+    );
+  };
+
+  return { isIdle, isLoading, isError, data, error, prefetchTrackInfo };
 };
 
 export default useSpotifyTrackInfo;

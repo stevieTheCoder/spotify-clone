@@ -44,14 +44,10 @@ function Player() {
         <div>Error {error}</div>
       ) : (
         <div className="flex items-center pt-2 space-x-4 md:pt-0">
-          <img
-            className="w-10 h-10"
-            src={trackInfo.album.images[0].url}
-            alt="album art"
-          />
+          <img className="w-10 h-10" src={trackInfo.albumSrc} alt="album art" />
           <div>
             <h3>{trackInfo.name}</h3>
-            <p className="text-gray-500">{trackInfo?.artists?.[0]?.name}</p>
+            <p className="text-gray-500">{trackInfo.artist}</p>
           </div>
         </div>
       )}

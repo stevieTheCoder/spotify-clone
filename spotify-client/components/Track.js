@@ -1,8 +1,14 @@
-import { useSpotifyPlayTrack } from "../hooks/spotify";
+import { useSpotifyPlayTrack, useSpotifyTrackInfo } from "../hooks/spotify";
 import millisecondsToMinutesAndSeconds from "../lib/time";
+import useDebounceMouseOver from "../hooks/useDebounceMouseOver";
 
 function Track({ order, track }) {
   const { mutation: playSpotifyTrack } = useSpotifyPlayTrack();
+  const { prefetchTrackInfo } = useSpotifyTrackInfo();
+  const { handleOnMouseOver, handleOnMouseLeave } = useDebounceMouseOver(
+    prefetchTrackInfo,
+    500
+  );
 
   return (
     <div
@@ -10,6 +16,8 @@ function Track({ order, track }) {
       onClick={() =>
         playSpotifyTrack.mutate({ trackId: track.id, trackUri: track.uri })
       }
+      onMouseOver={() => handleOnMouseOver(track.id)}
+      onMouseLeave={handleOnMouseLeave}
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>

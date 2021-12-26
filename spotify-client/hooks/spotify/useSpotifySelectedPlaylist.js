@@ -2,18 +2,19 @@ import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../../atoms/playlistAtom";
 import useSpotify from "./useSpotify";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 const useSpotifySelectedPlaylist = () => {
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const { spotifyApi, isAuthenticated } = useSpotify();
+  const queryClient = useQueryClient();
 
   // Fetch default playlist id if one has not been selected
   useEffect(() => {
     if (!isAuthenticated) return;
     if (playlistId !== null) return;
 
-    const fetchPlaylistId = async () => {
+    const fetchFeaturedPlaylistId = async () => {
       try {
         const response = await spotifyApi.getFeaturedPlaylists({
           limit: 1,
@@ -26,7 +27,7 @@ const useSpotifySelectedPlaylist = () => {
       }
     };
 
-    fetchPlaylistId();
+    fetchFeaturedPlaylistId();
   }, [spotifyApi, playlistId, isAuthenticated]);
 
   const fetchPlaylist = async (id) => {
@@ -40,11 +41,21 @@ const useSpotifySelectedPlaylist = () => {
     () => fetchPlaylist(playlistId),
     {
       enabled: isAuthenticated && !!playlistId,
-      staleTime: 600000,
+      staleTime: 60000,
     }
   );
 
-  return { isIdle, isLoading, isError, data, error };
+  const prefetchPlaylist = async (idToPrefetch) => {
+    await queryClient.prefetchQuery(
+      ["playlists", idToPrefetch],
+      () => fetchPlaylist(idToPrefetch),
+      {
+        staleTime: 60000,
+      }
+    );
+  };
+
+  return { isIdle, isLoading, isError, data, error, prefetchPlaylist };
 };
 
 export default useSpotifySelectedPlaylist;

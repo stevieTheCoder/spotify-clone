@@ -8,7 +8,11 @@ import {
 } from "@heroicons/react/outline";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
-import { useSpotifyUserPlaylists } from "../hooks/spotify";
+import {
+  useSpotifySelectedPlaylist,
+  useSpotifyUserPlaylists,
+} from "../hooks/spotify";
+import useDebounceMouseOver from "../hooks/useDebounceMouseOver";
 import { SkeletonSideBar } from "./skeletons";
 
 function Sidebar() {
@@ -20,6 +24,12 @@ function Sidebar() {
     data: userPlaylists,
     error,
   } = useSpotifyUserPlaylists();
+
+  const { prefetchPlaylist } = useSpotifySelectedPlaylist();
+  const { handleOnMouseOver, handleOnMouseLeave } = useDebounceMouseOver(
+    prefetchPlaylist,
+    500
+  );
 
   return (
     <div className="hidden h-screen md:inline-flex sm:w-[12rem] lg:w-[15rem] p-5 overflow-y-scroll text-xs text-gray-500 border-r border-gray-900 lg:text-sm scrollbar-hide pb-36">
@@ -62,6 +72,8 @@ function Sidebar() {
               className="cursor-pointer hover:text-white"
               key={playlist.id}
               onClick={() => setPlaylistId(playlist.id)}
+              onMouseOver={() => handleOnMouseOver(playlist.id)}
+              onMouseLeave={handleOnMouseLeave}
             >
               {playlist.name}
             </p>

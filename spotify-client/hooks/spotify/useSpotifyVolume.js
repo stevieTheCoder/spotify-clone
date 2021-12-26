@@ -13,7 +13,7 @@ const useSpotifyVolume = () => {
       } catch (err) {
         console.log("Something went wrong!", err);
       }
-    }, 200),
+    }, 500),
     []
   );
 
