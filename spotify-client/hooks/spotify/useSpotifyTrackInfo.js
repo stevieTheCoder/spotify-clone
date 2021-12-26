@@ -1,59 +1,37 @@
-import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { currentTrackIdState, isPlayingState } from "../../atoms/songAtom";
 import useSpotify from "./useSpotify";
+import { useQuery } from "react-query";
 
 const useSpotifyTrackInfo = () => {
   const { spotifyApi, isAuthenticated } = useSpotify();
-  const [currentTrackId, setCurrentTrackId] =
-    useRecoilState(currentTrackIdState);
-  const [, setIsPlaying] = useRecoilState(isPlayingState);
-  const [trackInfo, setTrackInfo] = useState(null);
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
+  const fetchCurrentPlayingTrack = async () => {
+    const response = await spotifyApi.getMyCurrentPlayingTrack();
+    return response.body?.item?.id;
+  };
 
-    if (!currentTrackId) {
-      const fetchCurrentPlayingTrack = async () => {
-        try {
-          const response = await spotifyApi.getMyCurrentPlayingTrack();
-          setCurrentTrackId(response.body?.item.id);
-        } catch (err) {
-          console.log("Something went wrong!", err);
-        }
-      };
+  const fetchTrackInfo = async (id) => {
+    const response = await spotifyApi.getTrack(id);
+    return response.body;
+  };
 
-      fetchCurrentPlayingTrack();
+  const { data: selectedTrackId } = useQuery(
+    "selectedTrackId",
+    fetchCurrentPlayingTrack,
+    {
+      enabled: isAuthenticated,
     }
+  );
 
-    if (currentTrackId) {
-      const fetchTrackInfo = async () => {
-        try {
-          const response = await spotifyApi.getTrack(currentTrackId);
-          setTrackInfo(response.body);
-        } catch (err) {
-          console.log("Something went wrong!", err);
-        }
-      };
-
-      fetchTrackInfo();
+  const { isIdle, isLoading, isError, data, error } = useQuery(
+    ["trackInfo", selectedTrackId],
+    () => fetchTrackInfo(selectedTrackId),
+    {
+      enabled: isAuthenticated && !!selectedTrackId,
+      staleTime: 600000,
     }
+  );
 
-    const fetchIsPlaying = async () => {
-      try {
-        const response = await spotifyApi.getMyCurrentPlaybackState(
-          currentTrackId
-        );
-        setIsPlaying(response.body?.is_playing ?? false);
-      } catch (err) {
-        console.log("Something went wrong!", err);
-      }
-    };
-
-    fetchIsPlaying();
-  }, [currentTrackId, spotifyApi, isAuthenticated]);
-
-  return trackInfo;
+  return { isIdle, isLoading, isError, data, error };
 };
 
 export default useSpotifyTrackInfo;

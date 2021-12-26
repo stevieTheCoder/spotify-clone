@@ -4,3 +4,4 @@ export { default as useSpotifyVolume } from "./useSpotifyVolume";
 export { default as useSpotifyUserPlaylists } from "./useSpotifyUserPlaylists";
 export { default as useSpotifyTrackInfo } from "./useSpotifyTrackInfo";
 export { default as useSpotifyPlayTrack } from "./useSpotifyPlayTrack";
+export { default as useSpotifyIsPlaying } from "./useSpotifyIsPlaying";

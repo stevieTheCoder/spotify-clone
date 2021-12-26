@@ -1,6 +1,5 @@
 import {
   VolumeUpIcon as VolumeDownIcon,
-  HeartIcon,
   ReplyIcon,
 } from "@heroicons/react/outline";
 import {
@@ -11,40 +10,48 @@ import {
   VolumeUpIcon,
   SwitchHorizontalIcon,
 } from "@heroicons/react/solid";
-import { useRecoilValue } from "recoil";
-import { isPlayingState } from "../atoms/songAtom";
+
 import {
   useSpotifyTogglePlayPause,
   useSpotifyTrackInfo,
   useSpotifyVolume,
+  useSpotifyIsPlaying,
 } from "../hooks/spotify";
 import PlayerButton from "./PlayerButton";
 
 const VOLUME_INCREMENT = 10;
 
 function Player() {
-  const trackInfo = useSpotifyTrackInfo();
-  const isPlaying = useRecoilValue(isPlayingState);
-  const { togglePlayPause } = useSpotifyTogglePlayPause();
+  const {
+    isIdle,
+    isLoading,
+    isError,
+    data: trackInfo,
+    error,
+  } = useSpotifyTrackInfo();
+
+  // TODO erroring possibly because refetch is null
+  const { data: isPlaying } = useSpotifyIsPlaying();
+  const { mutation: togglePlayPause } = useSpotifyTogglePlayPause();
   const [volume, setVolume] = useSpotifyVolume();
+
+  if (isLoading || isIdle) return <span>Loading...</span>;
+
+  if (isError) return <span>Error {error}</span>;
 
   return (
     <div className="flex flex-col justify-between px-6 py-4 text-xs text-white min-h-44 md:min-h-24 md:grid md:grid-cols-3 bg-gradient-to-b from-black to-gray-900 md:text-base">
       {/*Left */}
       <div className="flex items-center pt-2 space-x-4 md:pt-0">
-        {trackInfo && (
-          <>
-            <img
-              className="w-10 h-10"
-              src={trackInfo?.album.images?.[0]?.url}
-              alt="album art"
-            />
-            <div>
-              <h3>{trackInfo?.name}</h3>
-              <p className="text-gray-500">{trackInfo?.artists?.[0]?.name}</p>
-            </div>
-          </>
-        )}
+        <img
+          className="w-10 h-10"
+          src={trackInfo.album.images[0].url}
+          alt="album art"
+        />
+        <div>
+          <h3>{trackInfo.name}</h3>
+          <p className="text-gray-500">{trackInfo?.artists?.[0]?.name}</p>
+        </div>
       </div>
 
       {/*Center */}
@@ -55,7 +62,10 @@ function Player() {
         <PlayerButton>
           <RewindIcon />
         </PlayerButton>
-        <PlayerButton size="10" callback={togglePlayPause}>
+        <PlayerButton
+          size="10"
+          callback={() => togglePlayPause.mutate({ isPlaying })}
+        >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </PlayerButton>
         <PlayerButton>

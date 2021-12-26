@@ -1,40 +1,38 @@
-import { useRecoilState } from "recoil";
-import { currentTrackIdState, isPlayingState } from "../../atoms/songAtom";
 import useSpotify from "./useSpotify";
+import { useMutation, useQueryClient } from "react-query";
+import { useSpotifyIsPlaying } from ".";
 
 const useSpotifyTogglePlayPause = () => {
+  const { data: isPlaying } = useSpotifyIsPlaying();
+  const queryClient = useQueryClient();
   const { spotifyApi } = useSpotify();
-  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-  const [currentTrackId] = useRecoilState(currentTrackIdState);
 
-  const togglePlayPause = async () => {
-    try {
-      const response = await spotifyApi.getMyCurrentPlaybackState(
-        currentTrackId
-      );
-      setIsPlaying(response.body.is_playing);
-    } catch (err) {
-      console.log("Something went wrong!", err);
-    }
-
-    if (!isPlaying) {
-      try {
-        await spotifyApi.play();
-        setIsPlaying(true);
-      } catch (err) {
-        console.log("Something went wrong!", err);
-      }
-    } else {
-      try {
-        await spotifyApi.pause();
-        setIsPlaying(false);
-      } catch (err) {
-        console.log("Something went wrong!", err);
-      }
-    }
+  const playCurrentTrack = async () => {
+    spotifyApi.play();
   };
 
-  return { togglePlayPause };
+  const pauseCurrentTrack = async () => {
+    spotifyApi.pause();
+  };
+
+  const functionToRun = isPlaying ? pauseCurrentTrack : playCurrentTrack;
+
+  const mutation = useMutation(functionToRun, {
+    onMutate: async () => {
+      await queryClient.cancelQueries("isPlaying");
+
+      const previousisPlaying = queryClient.getQueryData("isPlaying");
+
+      queryClient.setQueryData("isPlaying", (old) => !old);
+
+      return { previousisPlaying };
+    },
+    onError: (_err, _newTodo, context) => {
+      queryClient.setQueryData("isPlaying", context.previousisPlaying);
+    },
+  });
+
+  return { mutation };
 };
 
 export default useSpotifyTogglePlayPause;
