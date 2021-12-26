@@ -6,12 +6,11 @@ import { useQuery, useQueryClient } from "react-query";
 
 const useSpotifySelectedPlaylist = () => {
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
-  const { spotifyApi, isAuthenticated } = useSpotify();
+  const { spotifyApi } = useSpotify();
   const queryClient = useQueryClient();
 
   // Fetch default playlist id if one has not been selected
   useEffect(() => {
-    if (!isAuthenticated) return;
     if (playlistId !== null) return;
 
     const fetchFeaturedPlaylistId = async () => {
@@ -28,7 +27,7 @@ const useSpotifySelectedPlaylist = () => {
     };
 
     fetchFeaturedPlaylistId();
-  }, [spotifyApi, playlistId, isAuthenticated]);
+  }, [spotifyApi, playlistId]);
 
   const fetchPlaylist = async (id) => {
     const response = await spotifyApi.getPlaylist(id);
@@ -40,7 +39,7 @@ const useSpotifySelectedPlaylist = () => {
     ["playlists", playlistId],
     () => fetchPlaylist(playlistId),
     {
-      enabled: isAuthenticated && !!playlistId,
+      enabled: !!playlistId,
       staleTime: 60000,
     }
   );

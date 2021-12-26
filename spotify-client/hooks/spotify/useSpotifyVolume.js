@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import useSpotify from "./useSpotify";
 
 const useSpotifyVolume = () => {
-  const { spotifyApi, isAuthenticated } = useSpotify();
+  const { spotifyApi } = useSpotify();
   const [volume, setVolume] = useState(100);
 
   const debounceSetVolume = useCallback(
@@ -18,10 +18,8 @@ const useSpotifyVolume = () => {
   );
 
   useEffect(() => {
-    if (!isAuthenticated) return;
-
     debounceSetVolume(volume);
-  }, [volume, isAuthenticated]);
+  }, [volume]);
 
   return [volume, setVolume];
 };

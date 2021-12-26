@@ -22,3 +22,5 @@ export default function Home() {
     </div>
   );
 }
+
+Home.auth = true;

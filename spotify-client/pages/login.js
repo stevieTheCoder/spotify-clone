@@ -1,16 +1,19 @@
 import { getProviders, signIn } from "next-auth/react";
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const providers = await getProviders();
+  const { callbackUrl } = context.query;
 
   return {
     props: {
       providers,
+      callbackUrl: callbackUrl ?? "/",
     },
   };
 }
 
-export default function Login({ providers }) {
+export default function Login({ providers, callbackUrl }) {
+  console.log(callbackUrl);
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen bg-black">
       <img
@@ -23,7 +26,7 @@ export default function Login({ providers }) {
         <div key={provider.name}>
           <button
             className="bg-[#18D860] text-white p-5 rounded-full"
-            onClick={() => signIn(provider.id, { callbackUrl: "/" })}
+            onClick={() => signIn(provider.id, { callbackUrl })}
           >
             Login with {provider.name}
           </button>

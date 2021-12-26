@@ -2,7 +2,7 @@ import useSpotify from "./useSpotify";
 import { useQuery } from "react-query";
 
 const useSpotifyUserPlaylists = () => {
-  const { spotifyApi, isAuthenticated } = useSpotify();
+  const { spotifyApi } = useSpotify();
 
   const fetchUserPlaylists = async () => {
     const response = await spotifyApi.getUserPlaylists();
@@ -13,8 +13,7 @@ const useSpotifyUserPlaylists = () => {
     "playlists",
     fetchUserPlaylists,
     {
-      enabled: isAuthenticated,
-      staleTime: 600000, // 10 minutes
+      staleTime: 60000,
     }
   );
 

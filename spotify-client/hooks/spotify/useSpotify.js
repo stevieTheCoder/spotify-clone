@@ -8,21 +8,18 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 const useSpotify = () => {
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === "authenticated";
+  const { data: session } = useSession();
 
   useEffect(() => {
-    if (!isAuthenticated) return;
-
     // If refresh access token fails, redirect user to login
     if (session.error === "RefreshAccessTokenError") {
       signIn();
     }
 
     spotifyApi.setAccessToken(session.accessToken);
-  }, [session, isAuthenticated]);
+  }, [session]);
 
-  return { spotifyApi, isAuthenticated };
+  return { spotifyApi };
 };
 
 export default useSpotify;

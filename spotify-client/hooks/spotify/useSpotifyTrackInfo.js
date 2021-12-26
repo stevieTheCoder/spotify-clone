@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "react-query";
 import useSpotifyGetCurrentlyPlaying from "./useSpotifyGetCurrentlyPlaying";
 
 const useSpotifyTrackInfo = () => {
-  const { spotifyApi, isAuthenticated } = useSpotify();
+  const { spotifyApi } = useSpotify();
   const { data: currentlyPlayingTrackId } = useSpotifyGetCurrentlyPlaying();
   const queryClient = useQueryClient();
 
@@ -21,7 +21,7 @@ const useSpotifyTrackInfo = () => {
     ["trackInfo", currentlyPlayingTrackId],
     () => fetchTrackInfo(currentlyPlayingTrackId),
     {
-      enabled: isAuthenticated && !!currentlyPlayingTrackId,
+      enabled: !!currentlyPlayingTrackId,
       staleTime: 60000,
     }
   );
