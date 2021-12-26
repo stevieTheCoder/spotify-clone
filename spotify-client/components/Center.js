@@ -10,7 +10,7 @@ const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 const defaultUserImage =
   "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
 
-export default function Center() {
+function Center() {
   const {
     isLoading,
     isIdle,
@@ -70,3 +70,5 @@ export default function Center() {
     </div>
   );
 }
+
+export default Center;
