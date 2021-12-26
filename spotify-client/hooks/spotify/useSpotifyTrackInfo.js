@@ -1,32 +1,21 @@
 import useSpotify from "./useSpotify";
 import { useQuery } from "react-query";
+import useSpotifyGetCurrentlyPlaying from "./useSpotifyGetCurrentlyPlaying";
 
 const useSpotifyTrackInfo = () => {
   const { spotifyApi, isAuthenticated } = useSpotify();
-
-  const fetchCurrentPlayingTrack = async () => {
-    const response = await spotifyApi.getMyCurrentPlayingTrack();
-    return response.body?.item?.id;
-  };
+  const { data: currentlyPlayingTrackId } = useSpotifyGetCurrentlyPlaying();
 
   const fetchTrackInfo = async (id) => {
     const response = await spotifyApi.getTrack(id);
     return response.body;
   };
 
-  const { data: selectedTrackId } = useQuery(
-    "selectedTrackId",
-    fetchCurrentPlayingTrack,
-    {
-      enabled: isAuthenticated,
-    }
-  );
-
   const { isIdle, isLoading, isError, data, error } = useQuery(
-    ["trackInfo", selectedTrackId],
-    () => fetchTrackInfo(selectedTrackId),
+    ["trackInfo", currentlyPlayingTrackId],
+    () => fetchTrackInfo(currentlyPlayingTrackId),
     {
-      enabled: isAuthenticated && !!selectedTrackId,
+      enabled: isAuthenticated && !!currentlyPlayingTrackId,
       staleTime: 600000,
     }
   );

@@ -5,24 +5,34 @@ const useSpotifyPlayTrack = () => {
   const { spotifyApi } = useSpotify();
   const queryClient = useQueryClient();
 
-  const playSpotifyTrack = async (trackUri) => {
+  const playSpotifyTrack = async ({ trackUri }) => {
     return await spotifyApi.play({
       uris: [trackUri],
     });
   };
 
   const mutation = useMutation(playSpotifyTrack, {
-    onMutate: async () => {
+    onMutate: async ({ trackId }) => {
+      // is playing state
       await queryClient.cancelQueries("isPlaying");
+      const previousIsPlaying = queryClient.getQueryData("isPlaying");
+      queryClient.setQueryData("isPlaying", () => true);
 
-      const previousisPlaying = queryClient.getQueryData("isPlaying");
+      // currently playing track id
+      await queryClient.cancelQueries("currentlyPlayingTrackId");
+      const previousCurrentlyPlayingTrackId = queryClient.getQueryData(
+        "currentlyPlayingTrackId"
+      );
+      queryClient.setQueryData("currentlyPlayingTrackId", trackId);
 
-      queryClient.setQueryData("isPlaying", true);
-
-      return { previousisPlaying };
+      return { previousIsPlaying, previousCurrentlyPlayingTrackId };
     },
     onError: (_err, _newTodo, context) => {
       queryClient.setQueryData("isPlaying", context.previousisPlaying);
+      queryClient.setQueryData(
+        "currentlyPlayingTrackId",
+        previousCurrentlyPlayingTrackId
+      );
     },
   });
 

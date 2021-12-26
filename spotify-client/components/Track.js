@@ -7,7 +7,9 @@ function Track({ order, track }) {
   return (
     <div
       className="grid grid-cols-2 px-5 py-4 text-gray-500 rounded-lg cursor-pointer hover:bg-gray-900"
-      onClick={() => playSpotifyTrack.mutate(track.uri)}
+      onClick={() =>
+        playSpotifyTrack.mutate({ trackId: track.id, trackUri: track.uri })
+      }
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>

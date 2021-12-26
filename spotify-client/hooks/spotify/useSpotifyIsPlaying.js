@@ -9,7 +9,7 @@ function useSpotifyIsPlaying() {
     return response.body.is_playing;
   };
 
-  const { isIdle, isLoading, isError, data, error, refetch } = useQuery(
+  const { isIdle, isLoading, isError, data, error } = useQuery(
     "isPlaying",
     fetchIsPlaying,
     {
