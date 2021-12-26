@@ -18,7 +18,7 @@ function useSpotifyIsPlaying() {
     }
   );
 
-  return { isIdle, isLoading, isError, data, error, refetch };
+  return { isIdle, isLoading, isError, data, error };
 }
 
 export default useSpotifyIsPlaying;

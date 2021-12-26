@@ -3,9 +3,9 @@ import { useMutation, useQueryClient } from "react-query";
 import { useSpotifyIsPlaying } from ".";
 
 const useSpotifyTogglePlayPause = () => {
+  const { spotifyApi } = useSpotify();
   const { data: isPlaying } = useSpotifyIsPlaying();
   const queryClient = useQueryClient();
-  const { spotifyApi } = useSpotify();
 
   const playCurrentTrack = async () => {
     spotifyApi.play();
