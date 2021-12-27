@@ -9,7 +9,9 @@ const useSpotifyDevices = () => {
     return response.body.devices;
   };
 
-  const query = useQuery("devices", fetchDevices);
+  const query = useQuery("devices", fetchDevices, {
+    staleTime: 60000,
+  });
 
   return query;
 };
