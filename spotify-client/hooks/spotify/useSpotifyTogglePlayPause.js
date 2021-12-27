@@ -8,7 +8,7 @@ const useSpotifyTogglePlayPause = () => {
   const queryClient = useQueryClient();
 
   const playCurrentTrack = async () => {
-    spotifyApi.play();
+    return await spotifyApi.play();
   };
 
   const pauseCurrentTrack = async () => {
