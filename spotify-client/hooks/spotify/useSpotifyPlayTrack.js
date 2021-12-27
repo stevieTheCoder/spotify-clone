@@ -6,9 +6,10 @@ const useSpotifyPlayTrack = () => {
   const queryClient = useQueryClient();
 
   const playSpotifyTrack = async ({ trackUri }) => {
-    return await spotifyApi.play({
+    const response = await spotifyApi.play({
       uris: [trackUri],
     });
+    return response;
   };
 
   const mutation = useMutation(playSpotifyTrack, {
@@ -31,8 +32,11 @@ const useSpotifyPlayTrack = () => {
       queryClient.setQueryData("isPlaying", context.previousisPlaying);
       queryClient.setQueryData(
         "currentlyPlayingTrackId",
-        previousCurrentlyPlayingTrackId
+        context.previousCurrentlyPlayingTrackId == null
+          ? null
+          : context.previousCurrentlyPlayingTrackId
       );
+      queryClient.invalidateQueries("currentlyPlayingTrackId");
     },
   });
 
