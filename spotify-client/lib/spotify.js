@@ -45,3 +45,8 @@ export const fetchFeaturedPlaylistId = async () => {
     console.log("Something went wrong!", err);
   }
 };
+
+export const fetchPlaylist = async (id) => {
+  const response = await spotifyApi.getPlaylist(id);
+  return response.body;
+};

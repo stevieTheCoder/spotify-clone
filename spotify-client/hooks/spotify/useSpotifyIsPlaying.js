@@ -6,7 +6,7 @@ function useSpotifyIsPlaying() {
 
   const fetchIsPlaying = async () => {
     const response = await spotifyApi.getMyCurrentPlaybackState();
-    return response.body.is_playing;
+    return response.body?.is_playing;
   };
 
   const { isIdle, isLoading, isError, data, error } = useQuery(

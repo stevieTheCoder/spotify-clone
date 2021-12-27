@@ -1,8 +1,9 @@
 import { debounce } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useSpotify from "./useSpotify";
 
 const useSpotifyVolume = () => {
+  const firstRenderRef = useRef(true);
   const { spotifyApi } = useSpotify();
   const [volume, setVolume] = useState(100);
 
@@ -18,6 +19,10 @@ const useSpotifyVolume = () => {
   );
 
   useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
     debounceSetVolume(volume);
   }, [volume]);
 
