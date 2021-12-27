@@ -38,8 +38,10 @@ function Player() {
   return (
     <div className="flex flex-col justify-between px-6 py-4 text-xs text-white min-h-44 md:min-h-24 md:grid md:grid-cols-3 bg-gradient-to-b from-black to-gray-900 md:text-base">
       {/*Left */}
-      {isLoading || isIdle ? (
+      {isLoading ? (
         <SkeletonPlayerTrackInfo />
+      ) : isIdle ? (
+        <div />
       ) : isError ? (
         <div>Error {error}</div>
       ) : (
