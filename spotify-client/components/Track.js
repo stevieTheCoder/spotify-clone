@@ -2,6 +2,7 @@ import { useSpotifyPlayTrack, useSpotifyTrackInfo } from "../hooks/spotify";
 import millisecondsToMinutesAndSeconds from "../lib/time";
 import useLongHover from "../hooks/useLongHover";
 import { useRef } from "react";
+import PropTypes from "prop-types";
 
 function Track({ order, track }) {
   const elementRef = useRef();
@@ -36,5 +37,10 @@ function Track({ order, track }) {
     </div>
   );
 }
+
+Track.propTypes = {
+  order: PropTypes.number.isRequired,
+  track: PropTypes.object.isRequired,
+};
 
 export default Track;

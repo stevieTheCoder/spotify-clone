@@ -13,7 +13,7 @@ const ActivateDevice = () => {
 
   if (isError) return <div>Error {error}</div>;
 
-  if (!!activeDevice)
+  if (activeDevice)
     return (
       <p className="text-xs font-semibold text-gray-500 ">
         Device: {activeDevice.name}

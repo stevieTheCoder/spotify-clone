@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function PlayerButton({ children, size, callback }) {
   return (
     <div
@@ -10,5 +12,11 @@ function PlayerButton({ children, size, callback }) {
     </div>
   );
 }
+
+PlayerButton.propTypes = {
+  children: PropTypes.node,
+  size: PropTypes.number,
+  callback: PropTypes.func,
+};
 
 export default PlayerButton;

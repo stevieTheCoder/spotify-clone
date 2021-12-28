@@ -1,4 +1,5 @@
 import Track from "./Track";
+import PropTypes from "prop-types";
 
 function Tracks({ tracks }) {
   {
@@ -13,5 +14,9 @@ function Tracks({ tracks }) {
     );
   }
 }
+
+Tracks.propTypes = {
+  tracks: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default Tracks;

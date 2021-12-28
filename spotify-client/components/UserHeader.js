@@ -1,4 +1,5 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import PropTypes from "prop-types";
 
 function UserHeader({ name, image, callback }) {
   return (
@@ -16,5 +17,11 @@ function UserHeader({ name, image, callback }) {
     </div>
   );
 }
+
+UserHeader.propTypes = {
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  callback: PropTypes.func,
+};
 
 export default UserHeader;

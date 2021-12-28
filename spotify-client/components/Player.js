@@ -14,9 +14,7 @@ import {
 import {
   useSpotifyTogglePlayPause,
   useSpotifyTrackInfo,
-  useSpotifyIsPlaying,
   useSpotifyDeviceVolume,
-  useSpotifyDevice,
 } from "../hooks/spotify";
 import ActivateDevice from "./ActivateDevice";
 

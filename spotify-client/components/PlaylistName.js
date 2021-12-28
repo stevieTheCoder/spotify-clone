@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import useLongHover from "../hooks/useLongHover";
+import PropTypes from "prop-types";
 
 const PlaylistName = ({ id, name }) => {
   const elementRef = useRef();
@@ -19,6 +20,11 @@ const PlaylistName = ({ id, name }) => {
       {name}
     </p>
   );
+};
+
+PlaylistName.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default PlaylistName;
