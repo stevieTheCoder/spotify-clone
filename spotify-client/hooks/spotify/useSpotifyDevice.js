@@ -9,11 +9,11 @@ const useSpotifyDevice = () => {
     return response.body.devices.find((device) => device.is_active);
   };
 
-  const query = useQuery("activeDevice", fetchDevices, {
+  const queryActiveDevice = useQuery("activeDevice", fetchDevices, {
     refetchInterval: 3000,
   });
 
-  return query;
+  return queryActiveDevice;
 };
 
 export default useSpotifyDevice;

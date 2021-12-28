@@ -25,11 +25,7 @@ import SkeletonPlayerTrackInfo from "./skeletons/SkeletonPlayerTrackInfo";
 
 function Player() {
   const {
-    isIdle,
-    isLoading,
-    isError,
-    data: trackInfo,
-    error,
+    queryTrackInfo: { isIdle, isLoading, isError, data: trackInfo, error },
   } = useSpotifyTrackInfo();
 
   const { isPlaying, mutation: togglePlayPause } = useSpotifyTogglePlayPause();

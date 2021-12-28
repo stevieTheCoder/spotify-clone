@@ -1,23 +1,21 @@
 import { useSpotifyPlayTrack, useSpotifyTrackInfo } from "../hooks/spotify";
 import millisecondsToMinutesAndSeconds from "../lib/time";
-import useDebounceMouseOver from "../hooks/useDebounceMouseOver";
+import useLongHover from "../hooks/useLongHover";
+import { useRef } from "react";
 
 function Track({ order, track }) {
+  const elementRef = useRef();
   const { mutation: playSpotifyTrack } = useSpotifyPlayTrack();
   const { prefetchTrackInfo } = useSpotifyTrackInfo();
-  const { handleOnMouseOver, handleOnMouseLeave } = useDebounceMouseOver(
-    prefetchTrackInfo,
-    200
-  );
+  useLongHover(elementRef, async () => await prefetchTrackInfo(track.id));
 
   return (
     <div
+      ref={elementRef}
       className="grid grid-cols-2 px-5 py-4 text-gray-500 rounded-lg cursor-pointer hover:bg-gray-900"
       onClick={() =>
         playSpotifyTrack.mutate({ trackId: track.id, trackUri: track.uri })
       }
-      onMouseOver={() => handleOnMouseOver(track.id)}
-      onMouseLeave={handleOnMouseLeave}
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>

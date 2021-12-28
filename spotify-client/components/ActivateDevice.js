@@ -21,9 +21,7 @@ const ActivateDevice = () => {
     );
 
   return (
-    <p className="text-xs font-semibold text-gray-500 ">
-      No active session, play a song on one of your devices
-    </p>
+    <p className="text-xs font-semibold text-red-500 ">No active device</p>
   );
 };
 

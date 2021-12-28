@@ -13,11 +13,7 @@ const defaultUserImage =
 
 function Center() {
   const {
-    isLoading,
-    isIdle,
-    isError,
-    data: playlist,
-    error,
+    queryPlaylist: { isLoading, isIdle, isError, data: playlist, error },
   } = useSpotifySelectedPlaylist();
   const { data: session } = useSession();
   const [colour, setColor] = useState(null);
