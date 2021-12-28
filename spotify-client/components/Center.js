@@ -5,7 +5,6 @@ import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 import UserHeader from "./UserHeader";
 import { SkeletonHeaderSection, SkeletonTracks } from "./skeletons";
-import ActivateDevice from "./ActivateDevice";
 
 const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 const defaultUserImage =
