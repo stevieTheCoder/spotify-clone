@@ -1,4 +1,7 @@
-import { useSpotifyPlayTrack, useSpotifyTrackInfo } from "../hooks/spotify";
+import {
+  useSpotifyPlayTrack,
+  useSpotifyPrefetchTrackInfo,
+} from "../hooks/spotify";
 import millisecondsToMinutesAndSeconds from "../lib/time";
 import useLongHover from "../hooks/useLongHover";
 import { useRef } from "react";
@@ -7,7 +10,7 @@ import PropTypes from "prop-types";
 function Track({ order, track }) {
   const elementRef = useRef();
   const { mutate: playSpotifyTrack } = useSpotifyPlayTrack();
-  const { prefetchTrackInfo } = useSpotifyTrackInfo();
+  const prefetchTrackInfo = useSpotifyPrefetchTrackInfo();
   useLongHover(elementRef, async () => await prefetchTrackInfo(track.id));
 
   return (

@@ -23,7 +23,11 @@ import SkeletonPlayerTrackInfo from "./skeletons/SkeletonPlayerTrackInfo";
 
 function Player() {
   const {
-    queryTrackInfo: { isIdle, isLoading, isError, data: trackInfo, error },
+    isIdle,
+    isLoading,
+    isError,
+    data: trackInfo,
+    error,
   } = useSpotifyTrackInfo();
 
   const { isPlaying, mutation: togglePlayPause } = useSpotifyTogglePlayPause();
@@ -69,7 +73,7 @@ function Player() {
           <RewindIcon />
         </PlayerButton>
         <PlayerButton
-          size="10"
+          size={10}
           callback={() => togglePlayPause.mutate({ isPlaying })}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
