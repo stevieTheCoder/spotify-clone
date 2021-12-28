@@ -32,7 +32,7 @@ const useSpotifyTogglePlayPause = () => {
     },
   });
 
-  return { mutation };
+  return { isPlaying, mutation };
 };
 
 export default useSpotifyTogglePlayPause;

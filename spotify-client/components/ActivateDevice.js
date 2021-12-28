@@ -1,4 +1,4 @@
-import useSpotifyDevices from "../hooks/spotify/useSpotifyDevices";
+import useSpotifyDevice from "../hooks/spotify/useSpotifyDevice";
 
 const ActivateDevice = () => {
   const {
@@ -6,19 +6,24 @@ const ActivateDevice = () => {
     isLoading,
     isError,
     error,
-    data: devices,
-  } = useSpotifyDevices();
+    data: activeDevice,
+  } = useSpotifyDevice();
 
   if (isIdle || isLoading) return null;
 
   if (isError) return <div>Error {error}</div>;
 
-  if (devices.length !== 0) return null;
+  if (!!activeDevice)
+    return (
+      <p className="text-xs font-semibold text-gray-500 ">
+        Device: {activeDevice.name}
+      </p>
+    );
 
   return (
-    <div className="fixed top-0 flex items-center justify-center w-full bg-yellow-300 min-h-10">
-      <p className="font-bold">Please activate a spotify web player</p>
-    </div>
+    <p className="text-xs font-semibold text-gray-500 ">
+      No active session, play a song on one of your devices
+    </p>
   );
 };
 

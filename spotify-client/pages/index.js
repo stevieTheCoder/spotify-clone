@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { dehydrate, QueryClient } from "react-query";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
-import ActivateDevice from "../components/ActivateDevice";
 import Center from "../components/Center";
 import Player from "../components/Player";
 import Sidebar from "../components/Sidebar";
@@ -59,7 +58,6 @@ export default function Home({ featuredPlaylistId }) {
       </Head>
 
       <main className="flex">
-        <ActivateDevice />
         <Sidebar />
         <Center />
       </main>

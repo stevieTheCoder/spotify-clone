@@ -14,13 +14,14 @@ import {
 import {
   useSpotifyTogglePlayPause,
   useSpotifyTrackInfo,
-  useSpotifyVolume,
   useSpotifyIsPlaying,
+  useSpotifyDeviceVolume,
+  useSpotifyDevice,
 } from "../hooks/spotify";
+import ActivateDevice from "./ActivateDevice";
+
 import PlayerButton from "./PlayerButton";
 import SkeletonPlayerTrackInfo from "./skeletons/SkeletonPlayerTrackInfo";
-
-const VOLUME_INCREMENT = 10;
 
 function Player() {
   const {
@@ -31,12 +32,23 @@ function Player() {
     error,
   } = useSpotifyTrackInfo();
 
-  const { data: isPlaying } = useSpotifyIsPlaying();
-  const { mutation: togglePlayPause } = useSpotifyTogglePlayPause();
-  const [volume, setVolume] = useSpotifyVolume();
+  const { isPlaying, mutation: togglePlayPause } = useSpotifyTogglePlayPause();
+
+  const {
+    enabled: volumeEnabled,
+    volume,
+    incrementVolume,
+    decrementVolume,
+    updateVolume,
+  } = useSpotifyDeviceVolume();
 
   return (
-    <div className="flex flex-col justify-between px-6 py-4 text-xs text-white min-h-44 md:min-h-24 md:grid md:grid-cols-3 bg-gradient-to-b from-black to-gray-900 md:text-base">
+    <div className="relative flex flex-col justify-between px-6 py-4 text-xs text-white min-h-44 md:min-h-24 md:grid md:grid-cols-3 bg-gradient-to-b from-black to-gray-900 md:text-base">
+      {/*Active Device Notification*/}
+      <div className="absolute transform -translate-x-1/2 left-1/2 top-1">
+        <ActivateDevice />
+      </div>
+
       {/*Left */}
       {isLoading ? (
         <SkeletonPlayerTrackInfo />
@@ -78,11 +90,7 @@ function Player() {
 
       {/* Right */}
       <div className="flex items-center justify-center space-x-2 md:justify-end md:space-x-4">
-        <PlayerButton
-          callback={() =>
-            volume > 0 && setVolume((cur) => cur - VOLUME_INCREMENT)
-          }
-        >
+        <PlayerButton callback={decrementVolume}>
           <VolumeDownIcon />
         </PlayerButton>
         <input
@@ -91,13 +99,10 @@ function Player() {
           value={volume}
           min={0}
           max={100}
-          onChange={(e) => setVolume(Number(e.target.value))}
+          onChange={(e) => updateVolume(Number(e.target.value))}
+          disabled={!volumeEnabled}
         />
-        <PlayerButton
-          callback={() =>
-            volume < 100 && setVolume((cur) => cur + VOLUME_INCREMENT)
-          }
-        >
+        <PlayerButton callback={incrementVolume}>
           <VolumeUpIcon />
         </PlayerButton>
       </div>
