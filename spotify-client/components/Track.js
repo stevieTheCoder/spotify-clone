@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 function Track({ order, track }) {
   const elementRef = useRef();
-  const { mutation: playSpotifyTrack } = useSpotifyPlayTrack();
+  const { mutate: playSpotifyTrack } = useSpotifyPlayTrack();
   const { prefetchTrackInfo } = useSpotifyTrackInfo();
   useLongHover(elementRef, async () => await prefetchTrackInfo(track.id));
 
@@ -15,7 +15,7 @@ function Track({ order, track }) {
       ref={elementRef}
       className="grid grid-cols-2 px-5 py-4 text-gray-500 rounded-lg cursor-pointer hover:bg-gray-900"
       onClick={() =>
-        playSpotifyTrack.mutate({ trackId: track.id, trackUri: track.uri })
+        playSpotifyTrack({ trackId: track.id, trackUri: track.uri })
       }
     >
       <div className="flex items-center space-x-4">

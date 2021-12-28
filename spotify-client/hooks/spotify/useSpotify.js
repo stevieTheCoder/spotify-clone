@@ -17,7 +17,7 @@ const useSpotify = () => {
     }
 
     spotifyApi.setAccessToken(session.accessToken);
-  }, [session]);
+  }, [session.accessToken, session.error]);
 
   return { spotifyApi };
 };

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import useSpotify from "./useSpotify";
 
@@ -5,14 +6,17 @@ const useSpotifyPlayTrack = () => {
   const { spotifyApi } = useSpotify();
   const queryClient = useQueryClient();
 
-  const playSpotifyTrack = async ({ trackUri }) => {
-    const response = await spotifyApi.play({
-      uris: [trackUri],
-    });
-    return response;
-  };
+  const playSpotifyTrack = useCallback(
+    async ({ trackUri }) => {
+      const response = await spotifyApi.play({
+        uris: [trackUri],
+      });
+      return response;
+    },
+    [spotifyApi]
+  );
 
-  const mutation = useMutation(playSpotifyTrack, {
+  const mutateSpotifyPlayTrack = useMutation(playSpotifyTrack, {
     onMutate: async ({ trackId }) => {
       // is playing state
       await queryClient.cancelQueries("isPlaying");
@@ -40,7 +44,7 @@ const useSpotifyPlayTrack = () => {
     },
   });
 
-  return { mutation };
+  return mutateSpotifyPlayTrack;
 };
 
 export default useSpotifyPlayTrack;

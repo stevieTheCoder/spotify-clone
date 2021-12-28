@@ -40,7 +40,7 @@ const useSpotifyTrackInfo = () => {
         }
       );
     },
-    [queryClient, fetchTrackInfo]
+    [fetchTrackInfo, queryClient]
   );
 
   return { queryTrackInfo, prefetchTrackInfo };

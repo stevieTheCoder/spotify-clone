@@ -1,15 +1,16 @@
 import useSpotify from "./useSpotify";
 import { useMutation, useQueryClient } from "react-query";
 import { useSpotifyIsPlaying } from ".";
+import { useCallback } from "react";
 
 const useSpotifyTogglePlayPause = () => {
   const { spotifyApi } = useSpotify();
   const { data: isPlaying } = useSpotifyIsPlaying();
   const queryClient = useQueryClient();
 
-  const playCurrentTrack = async () => {
+  const playCurrentTrack = useCallback(async () => {
     return await spotifyApi.play();
-  };
+  }, [spotifyApi]);
 
   const pauseCurrentTrack = async () => {
     spotifyApi.pause();

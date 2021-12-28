@@ -10,7 +10,6 @@ export const useSpotifyDeviceVolume = () => {
   const { spotifyApi } = useSpotify();
   const queryClient = useQueryClient();
   const { data: activeDevice } = useSpotifyDevice();
-
   const [volume, setVolume] = useState(50);
 
   const volumeMutation = useMutation(
@@ -45,11 +44,11 @@ export const useSpotifyDeviceVolume = () => {
 
   const incrementVolume = useCallback(() => {
     volume < 100 && setVolume((cur) => cur + VOLUME_INCREMENT);
-  }, []);
+  }, [volume]);
 
   const decrementVolume = useCallback(() => {
     volume > 0 && setVolume((cur) => cur - VOLUME_INCREMENT);
-  }, []);
+  }, [volume]);
 
   const updateVolume = useCallback((newVolume) => {
     setVolume(newVolume);

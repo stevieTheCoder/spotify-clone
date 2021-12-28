@@ -9,7 +9,7 @@ const PlaylistName = ({ id, name }) => {
   const elementRef = useRef();
   const [, setPlaylistId] = useRecoilState(playlistIdState);
   const { prefetchPlaylist } = useSpotifySelectedPlaylist();
-  useLongHover(elementRef, () => prefetchPlaylist(id));
+  useLongHover(elementRef, async () => await prefetchPlaylist(id));
 
   return (
     <p
