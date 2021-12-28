@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { RecoilRoot } from "recoil";
 import useFixMobileHeight from "../hooks/useFixMobileHeight";

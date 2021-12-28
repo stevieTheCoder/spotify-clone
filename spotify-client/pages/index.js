@@ -11,6 +11,7 @@ import spotifyApi, {
   fetchFeaturedPlaylistId,
   fetchPlaylist,
 } from "../lib/spotify";
+import PropTypes from "prop-types";
 
 export async function getServerSideProps(context) {
   const queryClient = new QueryClient();
@@ -46,9 +47,10 @@ export async function getServerSideProps(context) {
 
 export default function Home({ featuredPlaylistId }) {
   const [, setPlaylistId] = useRecoilState(playlistIdState);
+
   useEffect(() => {
     setPlaylistId(featuredPlaylistId);
-  }, []);
+  }, [featuredPlaylistId, setPlaylistId]);
 
   return (
     <div className="h-screen overflow-hidden bg-black">
@@ -68,5 +70,9 @@ export default function Home({ featuredPlaylistId }) {
     </div>
   );
 }
+
+Home.propTypes = {
+  featuredPlaylistId: PropTypes.string,
+};
 
 Home.auth = true;

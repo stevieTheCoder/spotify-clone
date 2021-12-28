@@ -1,4 +1,5 @@
 import { getProviders, signIn } from "next-auth/react";
+import PropTypes from "prop-types";
 
 export async function getServerSideProps(context) {
   const providers = await getProviders();
@@ -35,3 +36,8 @@ export default function Login({ providers, callbackUrl }) {
     </div>
   );
 }
+
+Login.propTypes = {
+  providers: PropTypes.object,
+  callbackUrl: PropTypes.string,
+};
