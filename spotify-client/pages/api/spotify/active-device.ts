@@ -1,22 +1,38 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react"
-import spotifyApi from "../../../lib/spotify"
+import { NextApiRequest, NextApiResponse } from "next";
+import { getToken } from "next-auth/jwt";
+import spotifyApi from "../../../lib/spotify";
+
+const secret = process.env.JWT_SECRET;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    const session = await getSession({req});
+  const token = await getToken({
+    req,
+    secret,
+  });
 
-    if (session === null) return res.status(401);
+  if (token) {
+    spotifyApi.setAccessToken(token.accessToken);
 
-    spotifyApi.setAccessToken(session.accessToken)
+    const response = await spotifyApi.getMyDevices();
 
-    if (session){
-        const response = await spotifyApi.getMyDevices();
-        const activeDevice = response.body.devices.find((device) => device.is_active);
-        if (activeDevice){
-            return res.status(200).json({name: activeDevice.name, volume: activeDevice.volume_percent});
-        }
-    } 
-    return res.status(204);
-}
+    const activeDevice = response.body.devices.find(
+      (device) => device.is_active
+    );
 
-export default handler
+    if (activeDevice) {
+      res
+        .status(200)
+        .json({ name: activeDevice.name, volume: activeDevice.volume_percent });
+      res.end();
+    }
+
+    res.status(204);
+    res.end();
+  }
+
+  // Not authorized
+  res.status(404);
+  res.end();
+};
+
+export default handler;
