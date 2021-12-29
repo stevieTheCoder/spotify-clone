@@ -1,4 +1,4 @@
-function SkeletonHeaderSection() {
+const SkeletonHeaderSection: React.FC = () => {
   return (
     <>
       <div className="flex-shrink-0 border-gray-600 shadow-2xl h-44 w-44"></div>
