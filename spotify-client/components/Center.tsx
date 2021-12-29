@@ -10,12 +10,12 @@ const colours = ["from-indigo-500", "from-blue-500", "from-purple-500"];
 const defaultUserImage =
   "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
 
-function Center() {
+const Center: React.FC = () => {
   const {
     queryPlaylist: { isLoading, isIdle, isError, data: playlist, error },
   } = useSpotifySelectedPlaylist();
   const { data: session } = useSession();
-  const [colour, setColor] = useState(null);
+  const [colour, setColor] = useState<string | null>(null);
 
   useEffect(() => {
     setColor(shuffle(colours)[0]);
@@ -27,7 +27,7 @@ function Center() {
     <div className="relative flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
         <UserHeader
-          name={session?.user?.name}
+          name={session?.user?.name ?? ""}
           image={userImage}
           callback={signOut}
         />
