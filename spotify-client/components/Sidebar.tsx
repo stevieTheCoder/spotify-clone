@@ -11,7 +11,7 @@ import { useSpotifyUserPlaylists } from "../hooks/spotify";
 import PlaylistName from "./PlaylistName";
 import { SkeletonSideBar } from "./skeletons";
 
-function Sidebar() {
+const Sidebar: React.FC = () => {
   const {
     isLoading,
     isIdle,
@@ -56,7 +56,7 @@ function Sidebar() {
         ) : isError ? (
           <span>Error {error}</span>
         ) : (
-          userPlaylists.map((playlist) => {
+          userPlaylists.map((playlist: any) => {
             return (
               <PlaylistName
                 key={playlist.id}

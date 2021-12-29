@@ -1,11 +1,18 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
+import {MouseEvent} from "react";
 
-function UserHeader({ name, image, callback }) {
+interface Props {
+  name: string,
+  image: string,
+  onClick: (event: MouseEvent<HTMLElement>) => void
+}
+
+const UserHeader: React.FC<Props> = ({ name, image, onClick }) => {
   return (
     <div
       className="flex items-center p-1 pr-2 space-x-3 text-white bg-black rounded-full cursor-pointer opacity-90 hover:opacity-80"
-      onClick={callback}
+      onClick={onClick}
     >
       <img
         src={image}
@@ -21,7 +28,7 @@ function UserHeader({ name, image, callback }) {
 UserHeader.propTypes = {
   name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  callback: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default UserHeader;

@@ -7,8 +7,13 @@ import useLongHover from "../hooks/useLongHover";
 import { useRef } from "react";
 import PropTypes from "prop-types";
 
-function Track({ order, track }) {
-  const elementRef = useRef();
+interface Props {
+  order: number,
+  track: any
+}
+
+const Track: React.FC<Props> = ({ order, track }) => {
+  const elementRef = useRef(null);
   const { mutate: playSpotifyTrack } = useSpotifyPlayTrack();
   const prefetchTrackInfo = useSpotifyPrefetchTrackInfo();
   useLongHover(elementRef, async () => await prefetchTrackInfo(track.id));
