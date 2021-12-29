@@ -1,18 +1,19 @@
-import { useCallback } from "react";
 import { useQuery } from "react-query";
-import useSpotify from "./useSpotify";
 
 const useSpotifyDevice = () => {
-  const { spotifyApi } = useSpotify();
-
-  const fetchDevices = useCallback(async () => {
-    const response = await spotifyApi.getMyDevices();
-    return response.body.devices.find((device) => device.is_active);
-  }, [spotifyApi]);
-
-  const queryActiveDevice = useQuery("activeDevice", fetchDevices, {
-    refetchInterval: 3000,
-  });
+  const queryActiveDevice = useQuery(
+    "activeDevice",
+    async () => {
+      const response = await fetch("/api/spotify/active-device");
+      if (!response.ok) {
+        throw new Error("Active device error");
+      }
+      return response.json();
+    },
+    {
+      refetchInterval: 3000,
+    }
+  );
 
   return queryActiveDevice;
 };

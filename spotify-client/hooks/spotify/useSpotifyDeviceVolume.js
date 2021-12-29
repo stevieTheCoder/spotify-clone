@@ -22,7 +22,7 @@ export const useSpotifyDeviceVolume = () => {
         const previousDevice = queryClient.getQueryData("activeDevice");
         queryClient.setQueryData("activeDevice", (old) => ({
           ...old,
-          volume_percent: volumePercent,
+          volume: volumePercent,
         }));
 
         return { previousDevice };
@@ -35,7 +35,7 @@ export const useSpotifyDeviceVolume = () => {
 
   useDebounce(() => volumeMutation.mutate(volume), 500, [volume]);
 
-  const activeDeviceVolume = activeDevice?.volume_percent;
+  const activeDeviceVolume = activeDevice?.volume;
 
   useEffect(() => {
     if (activeDeviceVolume == null) return;

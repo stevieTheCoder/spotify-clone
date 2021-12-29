@@ -46,7 +46,7 @@ export const fetchFeaturedPlaylistId = async () => {
   }
 };
 
-export const fetchPlaylist = async (id) => {
+export const fetchPlaylist = async (id: string) => {
   const response = await spotifyApi.getPlaylist(id);
   return response.body;
 };
