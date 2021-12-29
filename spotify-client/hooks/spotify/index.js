@@ -7,3 +7,4 @@ export { default as useSpotifyTrackInfo } from "./useSpotifyTrackInfo";
 export { default as useSpotifyPlayTrack } from "./useSpotifyPlayTrack";
 export { default as useSpotifyIsPlaying } from "./useSpotifyIsPlaying";
 export { default as useSpotifyPrefetchTrackInfo } from "./useSpotifyPrefetchTrackInfo";
+export { default as useSpotifyPrefetchPlaylist } from "./useSpotifyPrefetchPlaylist";

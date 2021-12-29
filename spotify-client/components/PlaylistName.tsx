@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
-import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import useLongHover from "../hooks/useLongHover";
 import PropTypes from "prop-types";
+import { useSpotifyPrefetchPlaylist } from "../hooks/spotify";
 
 interface Props {
   id: string,
@@ -13,7 +13,7 @@ interface Props {
 const PlaylistName: React.FC<Props> = ({ id, name }) => {
   const elementRef = useRef(null);
   const [, setPlaylistId] = useRecoilState(playlistIdState);
-  const { prefetchPlaylist } = useSpotifySelectedPlaylist();
+  const prefetchPlaylist = useSpotifyPrefetchPlaylist();
   useLongHover(elementRef, async () => await prefetchPlaylist(id));
 
   return (

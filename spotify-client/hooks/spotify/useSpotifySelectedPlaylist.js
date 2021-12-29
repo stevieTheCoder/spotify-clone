@@ -1,13 +1,12 @@
 import { useRecoilValue } from "recoil";
 import { playlistIdState } from "../../atoms/playlistAtom";
 import useSpotify from "./useSpotify";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useCallback } from "react";
 
 const useSpotifySelectedPlaylist = () => {
   const playlistId = useRecoilValue(playlistIdState);
   const { spotifyApi } = useSpotify();
-  const queryClient = useQueryClient();
 
   const fetchPlaylist = useCallback(
     async (id) => {
@@ -27,20 +26,7 @@ const useSpotifySelectedPlaylist = () => {
     }
   );
 
-  const prefetchPlaylist = useCallback(
-    async (idToPrefetch) => {
-      await queryClient.prefetchQuery(
-        ["playlists", idToPrefetch],
-        () => fetchPlaylist(idToPrefetch),
-        {
-          staleTime: 60000,
-        }
-      );
-    },
-    [queryClient, fetchPlaylist]
-  );
-
-  return { queryPlaylist, prefetchPlaylist };
+  return queryPlaylist;
 };
 
 export default useSpotifySelectedPlaylist;
