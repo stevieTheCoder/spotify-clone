@@ -12,9 +12,9 @@ const useSpotifyTogglePlayPause = () => {
     return await spotifyApi.play();
   }, [spotifyApi]);
 
-  const pauseCurrentTrack = async () => {
-    spotifyApi.pause();
-  };
+  const pauseCurrentTrack = useCallback(async () => {
+    return await spotifyApi.pause();
+  }, [spotifyApi]);
 
   const functionToRun = isPlaying ? pauseCurrentTrack : playCurrentTrack;
 
@@ -33,7 +33,7 @@ const useSpotifyTogglePlayPause = () => {
     },
   });
 
-  return { isPlaying, mutation };
+  return [mutation, isPlaying];
 };
 
 export default useSpotifyTogglePlayPause;

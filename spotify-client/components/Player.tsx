@@ -21,7 +21,7 @@ import ActivateDevice from "./ActivateDevice";
 import PlayerButton from "./PlayerButton";
 import SkeletonPlayerTrackInfo from "./skeletons/SkeletonPlayerTrackInfo";
 
-function Player() {
+const Player: React.FC = () => {
   const {
     isIdle,
     isLoading,
@@ -30,7 +30,7 @@ function Player() {
     error,
   } = useSpotifyTrackInfo();
 
-  const { isPlaying, mutation: togglePlayPause } = useSpotifyTogglePlayPause();
+  const [{mutate: togglePlayPause}, isPlaying]= useSpotifyTogglePlayPause();
 
   const {
     enabled: volumeEnabled,
@@ -56,10 +56,10 @@ function Player() {
         <div>Error {error}</div>
       ) : (
         <div className="flex items-center pt-2 space-x-4 md:pt-0">
-          <img className="w-10 h-10" src={trackInfo.albumSrc} alt="album art" />
+          <img className="w-10 h-10" src={trackInfo?.albumSrc} alt="album art" />
           <div>
-            <h3>{trackInfo.name}</h3>
-            <p className="text-gray-500">{trackInfo.artist}</p>
+            <h3>{trackInfo?.name}</h3>
+            <p className="text-gray-500">{trackInfo?.artist}</p>
           </div>
         </div>
       )}
@@ -74,7 +74,7 @@ function Player() {
         </PlayerButton>
         <PlayerButton
           size={10}
-          callback={() => togglePlayPause.mutate({ isPlaying })}
+          callback={() => togglePlayPause()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </PlayerButton>
