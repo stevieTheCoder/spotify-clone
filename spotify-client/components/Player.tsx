@@ -74,7 +74,7 @@ const Player: React.FC = () => {
         </PlayerButton>
         <PlayerButton
           size={10}
-          callback={() => togglePlayPause()}
+          onClick={() => togglePlayPause()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </PlayerButton>
@@ -88,7 +88,7 @@ const Player: React.FC = () => {
 
       {/* Right */}
       <div className="flex items-center justify-center space-x-2 md:justify-end md:space-x-4">
-        <PlayerButton callback={decrementVolume}>
+        <PlayerButton onClick={decrementVolume}>
           <VolumeDownIcon />
         </PlayerButton>
         <input
@@ -100,7 +100,7 @@ const Player: React.FC = () => {
           onChange={(e) => updateVolume(Number(e.target.value))}
           disabled={!volumeEnabled}
         />
-        <PlayerButton callback={incrementVolume}>
+        <PlayerButton onClick={incrementVolume}>
           <VolumeUpIcon />
         </PlayerButton>
       </div>
