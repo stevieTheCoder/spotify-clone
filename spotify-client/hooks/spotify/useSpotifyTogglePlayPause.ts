@@ -1,5 +1,10 @@
 import useSpotify from "./useSpotify";
-import { useMutation, useQueryClient } from "react-query";
+import {
+  MutationFunction,
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "react-query";
 import { useSpotifyIsPlaying } from ".";
 import { useCallback } from "react";
 
@@ -22,18 +27,20 @@ const useSpotifyTogglePlayPause = () => {
     onMutate: async () => {
       await queryClient.cancelQueries("isPlaying");
 
-      const previousisPlaying = queryClient.getQueryData("isPlaying");
+      const previousisPlaying = queryClient.getQueryData<string>("isPlaying");
 
       queryClient.setQueryData("isPlaying", (old) => !old);
 
       return { previousisPlaying };
     },
-    onError: (_err, _newTodo, context) => {
-      queryClient.setQueryData("isPlaying", context.previousisPlaying);
+    onError: (_err, _variables, context) => {
+      if (context?.previousisPlaying) {
+        queryClient.setQueryData("isPlaying", context.previousisPlaying);
+      }
     },
   });
 
-  return [mutation, isPlaying];
+  return { mutation, isPlaying };
 };
 
 export default useSpotifyTogglePlayPause;

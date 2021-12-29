@@ -27,7 +27,7 @@ const Center: React.FC = () => {
         <UserHeader
           name={session?.user?.name ?? ""}
           image={userImage}
-          callback={signOut}
+          onClick={signOut}
         />
       </header>
 
@@ -58,7 +58,7 @@ const Center: React.FC = () => {
         <span>Error {error}</span>
       ) : (
         <>
-          <Tracks tracks={playlist.tracks} />
+          <Tracks tracks={playlist?.tracks} />
         </>
       )}
     </div>

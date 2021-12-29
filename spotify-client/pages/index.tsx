@@ -12,8 +12,9 @@ import spotifyApi, {
   fetchPlaylist,
 } from "../lib/spotify";
 import PropTypes from "prop-types";
+import { GetServerSideProps } from "next";
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   const { req } = context;
   const session = await getSession({ req });
@@ -31,24 +32,32 @@ export async function getServerSideProps(context) {
 
   const featuredPlaylistId = await fetchFeaturedPlaylistId();
 
-  // Data will be available client side
-  await queryClient.prefetchQuery(
-    ["playlists", featuredPlaylistId],
-    () => fetchPlaylist(featuredPlaylistId),
-    {
-      staleTime: 60000,
+  if (featuredPlaylistId)
+  {
+    // Data will be available client side
+    await queryClient.prefetchQuery(
+      ["playlists", featuredPlaylistId],
+      () => fetchPlaylist(featuredPlaylistId),
+      {
+        staleTime: 60000,
+      }
+      );
     }
-  );
 
   return {
     props: { dehydratedState: dehydrate(queryClient), featuredPlaylistId },
   };
 }
 
-export default function Home({ featuredPlaylistId }) {
+interface Props {
+  featuredPlaylistId?: string
+}
+
+const Home: React.FC<Props> & {auth?: boolean} = ({ featuredPlaylistId } ) => {
   const [, setPlaylistId] = useRecoilState(playlistIdState);
 
   useEffect(() => {
+    if (featuredPlaylistId == null) return;
     setPlaylistId(featuredPlaylistId);
   }, [featuredPlaylistId, setPlaylistId]);
 
@@ -76,3 +85,5 @@ Home.propTypes = {
 };
 
 Home.auth = true;
+
+export default Home;
