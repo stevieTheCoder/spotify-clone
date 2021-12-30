@@ -5,6 +5,7 @@ import { getToken } from "next-auth/jwt";
 import spotifyApi from "../../utils/spotify";
 import { deviceRouter } from "./device";
 import { trackRouter } from "./track";
+import { playlistsRouter } from "./playlists";
 
 const secret = process.env.JWT_SECRET;
 
@@ -30,6 +31,7 @@ export const appRouter = createRouter()
     return next();
   })
   .merge("device.", deviceRouter)
-  .merge("track.", trackRouter);
+  .merge("track.", trackRouter)
+  .merge("playlists.", playlistsRouter);
 
 export type AppRouter = typeof appRouter;

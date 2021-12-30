@@ -1,29 +1,19 @@
+import { trpc } from "@/utils/trpc";
 import { useCallback } from "react";
-import { useQueryClient } from "react-query";
-import useSpotify from "./useSpotify";
 
 const useSpotifyPrefetchPlaylist = () => {
-  const queryClient = useQueryClient();
-
-  const fetchPlaylist = useCallback(
-    async (id) => {
-      const response = await spotifyApi.getPlaylist(id);
-      return response.body;
-    },
-    [spotifyApi]
-  );
+  const utils = trpc.useContext();
 
   const prefetchPlaylist = useCallback(
     async (idToPrefetch) => {
-      await queryClient.prefetchQuery(
-        ["playlists", idToPrefetch],
-        () => fetchPlaylist(idToPrefetch),
+      await utils.prefetchQuery(
+        ["playlists.playlist-by-id", { playlistId: idToPrefetch }],
         {
           staleTime: 60000,
         }
       );
     },
-    [queryClient, fetchPlaylist]
+    [utils]
   );
 
   return prefetchPlaylist;
