@@ -1,41 +1,73 @@
-import useSpotify from "./useSpotify";
-import { useMutation, useQueryClient } from "react-query";
-import { useSpotifyIsPlaying } from ".";
+import { inferQueryResponse, trpc } from "@/utils/trpc";
 import { useCallback } from "react";
+import { useSpotifyIsPlaying } from ".";
+
+type CurrentlyPlaying = inferQueryResponse<"device.current-playback-state">;
+
+interface Context {
+  previousIsPlaying: CurrentlyPlaying;
+}
 
 const useSpotifyTogglePlayPause = () => {
-  const { spotifyApi } = useSpotify();
-  const { data: isPlaying } = useSpotifyIsPlaying();
-  const queryClient = useQueryClient();
+  const { data: playingState } = useSpotifyIsPlaying();
+  const utils = trpc.useContext();
 
-  const playCurrentTrack = useCallback(async () => {
-    return await spotifyApi.play();
-  }, [spotifyApi]);
-
-  const pauseCurrentTrack = useCallback(async () => {
-    return await spotifyApi.pause();
-  }, [spotifyApi]);
-
-  const functionToRun = isPlaying ? pauseCurrentTrack : playCurrentTrack;
-
-  const mutation = useMutation(functionToRun, {
+  const playMutation = trpc.useMutation(["device.play"], {
     onMutate: async () => {
-      await queryClient.cancelQueries("isPlaying");
+      await utils.cancelQuery(["device.current-playback-state"]);
 
-      const previousisPlaying = queryClient.getQueryData<string>("isPlaying");
+      const previousIsPlaying = utils.getQueryData([
+        "device.current-playback-state",
+      ]);
 
-      queryClient.setQueryData("isPlaying", (old) => !old);
+      utils.setQueryData(["device.current-playback-state"], {
+        isPlaying: true,
+      });
 
-      return { previousisPlaying };
+      return { previousIsPlaying };
     },
-    onError: (_err, _variables, context) => {
-      if (context?.previousisPlaying) {
-        queryClient.setQueryData("isPlaying", context.previousisPlaying);
-      }
+    onError: (_error, _variables, context) => {
+      const c = context as Context;
+      utils.setQueryData(
+        ["device.current-playback-state"],
+        c.previousIsPlaying
+      );
     },
   });
 
-  return { mutation, isPlaying };
+  const pauseMutation = trpc.useMutation(["device.pause"], {
+    onMutate: async () => {
+      await utils.cancelQuery(["device.current-playback-state"]);
+
+      const previousIsPlaying = utils.getQueryData([
+        "device.current-playback-state",
+      ]);
+
+      if (previousIsPlaying) {
+        utils.setQueryData(["device.current-playback-state"], {
+          isPlaying: false,
+        });
+      }
+      return { previousIsPlaying };
+    },
+    onError: (_error, _variables, context) => {
+      const c = context as Context;
+      utils.setQueryData(
+        ["device.current-playback-state"],
+        c.previousIsPlaying
+      );
+    },
+  });
+
+  const togglePlayPause = useCallback(() => {
+    if (playingState?.isPlaying) {
+      pauseMutation.mutate();
+      return;
+    }
+    playMutation.mutate();
+  }, [pauseMutation, playMutation, playingState?.isPlaying]);
+
+  return { togglePlayPause, isPlaying: playingState?.isPlaying };
 };
 
 export default useSpotifyTogglePlayPause;
