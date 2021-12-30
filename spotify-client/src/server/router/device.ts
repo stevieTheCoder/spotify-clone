@@ -13,7 +13,7 @@ export const deviceRouter = createRouter()
       );
 
       if (activeDevice == null) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        return null;
       }
 
       return { name: activeDevice.name, volume: activeDevice.volume_percent };
@@ -32,5 +32,15 @@ export const deviceRouter = createRouter()
     input: z.object({ volume: z.number().min(0).max(100) }),
     async resolve(req) {
       return await spotifyApi.setVolume(req.input.volume);
+    },
+  })
+  .mutation("play", {
+    async resolve() {
+      return await spotifyApi.play();
+    },
+  })
+  .mutation("pause", {
+    async resolve() {
+      return await spotifyApi.pause();
     },
   });

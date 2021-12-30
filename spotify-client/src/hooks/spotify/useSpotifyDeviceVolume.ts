@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import useDebounce from "../useDebounce";
 import { useSpotifyDevice } from ".";
 import { inferQueryResponse, trpc } from "@/utils/trpc";
-import { useQueryClient } from "react-query";
 
 type ActiveDevice = inferQueryResponse<"device.active-device">;
 
@@ -13,23 +12,21 @@ interface Context {
 const VOLUME_INCREMENT = 10;
 
 export const useSpotifyDeviceVolume = () => {
-  const queryClient = useQueryClient();
-
+  const utils = trpc.useContext();
   const { data: activeDevice } = useSpotifyDevice();
   const [volume, setVolume] = useState(50);
 
   const volumeMutation = trpc.useMutation(["device.volume"], {
     onMutate: async ({ volume }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries("activeDevice");
+      await utils.cancelQuery(["device.active-device"]);
 
       // Snapshot the previous value
-      const previousDevice =
-        queryClient.getQueryData<ActiveDevice>("activeDevice");
+      const previousDevice = utils.getQueryData(["device.active-device"]);
 
       // Optimistically update to the new value
       if (previousDevice) {
-        queryClient.setQueryData<ActiveDevice>("activeDevice", {
+        utils.setQueryData(["device.active-device"], {
           ...previousDevice,
           volume,
         });
@@ -38,8 +35,8 @@ export const useSpotifyDeviceVolume = () => {
       return { previousDevice };
     },
     onError: (_err, _variables, context) => {
-      queryClient.setQueryData(
-        "activeDevice",
+      utils.setQueryData(
+        ["device.active-device"],
         (context as Context).previousDevice
       );
     },

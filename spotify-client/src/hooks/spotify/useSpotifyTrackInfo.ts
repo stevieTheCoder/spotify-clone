@@ -6,9 +6,9 @@ const useSpotifyTrackInfo = () => {
 
   const queryTrackInfo = trpc.useQuery(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ["track.track-info", { trackId: currentlyPlayingTrackId! }],
+    ["track.track-info", { trackId: currentlyPlayingTrackId?.trackId ?? "" }],
     {
-      enabled: !!currentlyPlayingTrackId,
+      enabled: !!currentlyPlayingTrackId?.trackId,
       staleTime: 60000,
     }
   );

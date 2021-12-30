@@ -3,15 +3,15 @@ import spotifyApi from "../../utils/spotify";
 import { createRouter } from "./app";
 
 export const trackRouter = createRouter()
-  .query("currently-playing", {
+  .query("currently-playing-id", {
     async resolve() {
       const response = await spotifyApi.getMyCurrentPlayingTrack();
-      return response.body?.item?.id;
+      return { trackId: response.body.item?.id };
     },
   })
   .query("track-info", {
     input: z.object({
-      trackId: z.string(),
+      trackId: z.string().nonempty(),
     }),
     async resolve(req) {
       const response = await spotifyApi.getTrack(req.input.trackId);
@@ -21,5 +21,11 @@ export const trackRouter = createRouter()
         artist: response.body.artists[0].name,
         name: response.body.name,
       };
+    },
+  })
+  .mutation("play", {
+    input: z.object({ trackUri: z.string(), trackId: z.string() }),
+    async resolve(req) {
+      return await spotifyApi.play({ uris: [req.input.trackUri] });
     },
   });

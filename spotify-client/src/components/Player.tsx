@@ -30,7 +30,7 @@ const Player: React.FC = () => {
     error,
   } = useSpotifyTrackInfo();
 
-  const {mutation: togglePlayPause, isPlaying}= useSpotifyTogglePlayPause();
+  const {togglePlayPause, isPlaying}= useSpotifyTogglePlayPause();
 
   const {
     enabled: volumeEnabled,
@@ -74,7 +74,7 @@ const Player: React.FC = () => {
         </PlayerButton>
         <PlayerButton
           size={10}
-          onClick={() => togglePlayPause.mutate()}
+          onClick={() => togglePlayPause()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </PlayerButton>

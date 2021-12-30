@@ -4,27 +4,19 @@ import { RecoilRoot } from "recoil";
 import useFixMobileHeight from "../hooks/useFixMobileHeight";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "@/styles/globals.css";
-import { QueryClient, QueryClientProvider, Hydrate } from "react-query";
-import { useState } from "react";
 import type { AppProps } from "next/app";
 import { AppRouter } from "@/server/router/app";
 import { withTRPC } from "@trpc/next";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  const [queryClient] = useState(() => new QueryClient());
+
   useFixMobileHeight();
 
   return (
     <SessionProvider session={session}>
       <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-
-                <Component {...pageProps} />
-
-            <ReactQueryDevtools initialIsOpen={false} />
-          </Hydrate>
-        </QueryClientProvider>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />     
       </RecoilRoot>
     </SessionProvider>
   )

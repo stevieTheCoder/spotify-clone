@@ -5,7 +5,7 @@ const useSpotifyPrefetchPlaylist = () => {
   const utils = trpc.useContext();
 
   const prefetchPlaylist = useCallback(
-    async (idToPrefetch) => {
+    async (idToPrefetch: string) => {
       await utils.prefetchQuery(
         ["playlists.playlist-by-id", { playlistId: idToPrefetch }],
         {
