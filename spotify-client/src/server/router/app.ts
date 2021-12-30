@@ -2,13 +2,13 @@ import * as trpc from "@trpc/server";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { inferAsyncReturnType, TRPCError } from "@trpc/server";
 import { getToken } from "next-auth/jwt";
-import { z } from "zod";
 import spotifyApi from "../../utils/spotify";
 import { deviceRouter } from "./device";
+import { trackRouter } from "./track";
 
 const secret = process.env.JWT_SECRET;
 
-export async function createContext({ req, res }: CreateNextContextOptions) {
+export async function createContext({ req }: CreateNextContextOptions) {
   return {
     req,
   };
@@ -29,6 +29,7 @@ export const appRouter = createRouter()
     spotifyApi.setAccessToken(token.accessToken);
     return next();
   })
-  .merge("device.", deviceRouter);
+  .merge("device.", deviceRouter)
+  .merge("track.", trackRouter);
 
 export type AppRouter = typeof appRouter;

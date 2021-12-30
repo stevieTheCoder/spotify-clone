@@ -5,6 +5,7 @@ import { inferQueryResponse, trpc } from "@/utils/trpc";
 import { useQueryClient } from "react-query";
 
 type ActiveDevice = inferQueryResponse<"device.active-device">;
+
 interface Context {
   previousDevice: ActiveDevice;
 }
@@ -61,7 +62,7 @@ export const useSpotifyDeviceVolume = () => {
     volume > 0 && setVolume((cur) => cur - VOLUME_INCREMENT);
   }, [volume]);
 
-  const updateVolume = useCallback((newVolume) => {
+  const updateVolume = useCallback((newVolume: number) => {
     setVolume(newVolume);
   }, []);
 

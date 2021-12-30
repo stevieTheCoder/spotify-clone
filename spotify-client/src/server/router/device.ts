@@ -19,6 +19,15 @@ export const deviceRouter = createRouter()
       return { name: activeDevice.name, volume: activeDevice.volume_percent };
     },
   })
+  .query("current-playback-state", {
+    async resolve() {
+      const response = await spotifyApi.getMyCurrentPlaybackState();
+      if (response.statusCode === 204) {
+        return { isPlaying: false };
+      }
+      return { isPlaying: response.body.is_playing };
+    },
+  })
   .mutation("volume", {
     input: z.object({ volume: z.number().min(0).max(100) }),
     async resolve(req) {

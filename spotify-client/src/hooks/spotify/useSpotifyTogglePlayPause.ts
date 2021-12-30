@@ -1,10 +1,5 @@
 import useSpotify from "./useSpotify";
-import {
-  MutationFunction,
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useSpotifyIsPlaying } from ".";
 import { useCallback } from "react";
 
