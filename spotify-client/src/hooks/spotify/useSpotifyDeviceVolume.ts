@@ -1,39 +1,50 @@
 import { useCallback, useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import useSpotify from "./useSpotify";
 import useDebounce from "../useDebounce";
 import { useSpotifyDevice } from ".";
+import { inferQueryResponse, trpc } from "@/utils/trpc";
+import { useQueryClient } from "react-query";
+
+type ActiveDevice = inferQueryResponse<"device.active-device">;
+interface Context {
+  previousDevice: ActiveDevice;
+}
 
 const VOLUME_INCREMENT = 10;
 
 export const useSpotifyDeviceVolume = () => {
-  const { spotifyApi } = useSpotify();
   const queryClient = useQueryClient();
+
   const { data: activeDevice } = useSpotifyDevice();
   const [volume, setVolume] = useState(50);
 
-  const volumeMutation = useMutation(
-    (volumePercent) => {
-      return spotifyApi.setVolume(volumePercent);
+  const volumeMutation = trpc.useMutation(["device.volume"], {
+    onMutate: async ({ volume }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries("activeDevice");
+
+      // Snapshot the previous value
+      const previousDevice =
+        queryClient.getQueryData<ActiveDevice>("activeDevice");
+
+      // Optimistically update to the new value
+      if (previousDevice) {
+        queryClient.setQueryData<ActiveDevice>("activeDevice", {
+          ...previousDevice,
+          volume,
+        });
+      }
+
+      return { previousDevice };
     },
-    {
-      onMutate: async (volumePercent) => {
-        await queryClient.cancelQueries("activeDevice");
-        const previousDevice = queryClient.getQueryData("activeDevice");
-        queryClient.setQueryData("activeDevice", (old) => ({
-          ...old,
-          volume: volumePercent,
-        }));
+    onError: (_err, _variables, context) => {
+      queryClient.setQueryData(
+        "activeDevice",
+        (context as Context).previousDevice
+      );
+    },
+  });
 
-        return { previousDevice };
-      },
-      onError: (_err, _volumePercent, context) => {
-        queryClient.setQueryData("activeDevice", context.previousDevice);
-      },
-    }
-  );
-
-  useDebounce(() => volumeMutation.mutate(volume), 500, [volume]);
+  useDebounce(() => volumeMutation.mutate({ volume }), 500, [volume]);
 
   const activeDeviceVolume = activeDevice?.volume;
 
