@@ -1,4 +1,4 @@
-import { trpc } from "../../lib/trpc";
+import { trpc } from "../../utils/trpc";
 
 const useSpotifyDevice = () => {
   return trpc.useQuery(["active-device"], { refetchInterval: 3000 });

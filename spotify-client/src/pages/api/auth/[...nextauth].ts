@@ -1,9 +1,7 @@
-import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
+import NextAuth from "next-auth/next";
 import SpotifyProvider from "next-auth/providers/spotify";
-import spotifyApi, { LOGIN_URL } from "../../../lib/spotify";
-
-
+import spotifyApi, { LOGIN_URL } from "@/utils/spotify";
 
 const refreshAccessToken = async (token: JWT) => {
   try {
@@ -30,8 +28,8 @@ const refreshAccessToken = async (token: JWT) => {
 export default NextAuth({
   providers: [
     SpotifyProvider({
-      clientId: process.env.NEXT_PUBLIC_CLIENT_ID ?? "",
-      clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET ?? "",
+      clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
+      clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
       authorization: LOGIN_URL,
     }),
   ],
@@ -40,7 +38,7 @@ export default NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async jwt({token, account, user }) {
+    async jwt({ token, account, user }) {
       // Initial sign in
       if (account && user) {
         console.log(">> INITIAL SIGN IN");
@@ -64,10 +62,9 @@ export default NextAuth({
       // Access token has expired, need to refresh
       return await refreshAccessToken(token);
     },
-
     async session({ session, token }) {
       session.user = token.user;
-      session.accessToken = token.accessToken;      
+      session.accessToken = token.accessToken;
       session.error = token.error;
 
       return session;

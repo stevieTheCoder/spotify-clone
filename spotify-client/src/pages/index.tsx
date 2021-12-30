@@ -10,14 +10,16 @@ import Sidebar from "../components/Sidebar";
 import spotifyApi, {
   fetchFeaturedPlaylistId,
   fetchPlaylist,
-} from "../lib/spotify";
+} from "../utils/spotify";
 import PropTypes from "prop-types";
 import { GetServerSideProps } from "next";
 
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
-  const { req } = context;
-  const session = await getSession({ req });
+  const req = context.req;
+
+  const session = await getSession({ req});
 
   if (!session) {
     return {

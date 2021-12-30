@@ -3,7 +3,7 @@ import { CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { inferAsyncReturnType, TRPCError } from "@trpc/server";
 import { getToken } from "next-auth/jwt";
 import { z } from "zod";
-import spotifyApi from "../../lib/spotify";
+import spotifyApi from "../../utils/spotify";
 
 const secret = process.env.JWT_SECRET;
 

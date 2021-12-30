@@ -2,7 +2,7 @@ import {
   useSpotifyPlayTrack,
   useSpotifyPrefetchTrackInfo,
 } from "../hooks/spotify";
-import millisecondsToMinutesAndSeconds from "../lib/time";
+import millisecondsToMinutesAndSeconds from "../utils/time";
 import useLongHover from "../hooks/useLongHover";
 import { useRef } from "react";
 import PropTypes from "prop-types";
