@@ -55,15 +55,7 @@ const Center: React.FC = () => {
         )}
       </section>
 
-      {isLoading || isIdle ? (
-        <SkeletonTracks />
-      ) : isError ? (
-        <span>Error {error}</span>
-      ) : (
-        <>
-          <Tracks tracks={playlist?.tracks} />
-        </>
-      )}
+      {playlist?.tracks ? <Tracks tracks={playlist.tracks} /> : null}
     </div>
   );
 };

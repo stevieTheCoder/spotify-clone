@@ -30,7 +30,7 @@ export const playlistsRouter = createRouter()
         tracks.push({
           id: i.track.id,
           uri: i.track.uri,
-          albumImageSrc: i.track.album.images[0].url,
+          albumImageSrc: i.track.album.images?.[0]?.url ?? data.images[0].url, // Default to playlist image
           name: i.track.name,
           artistName: i.track.artists[0].name,
           albumName: i.track.album.name,

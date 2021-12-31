@@ -31,8 +31,3 @@ const spotifyApi = new SpotifyWebApi({
 export default spotifyApi;
 
 export { LOGIN_URL };
-
-export const fetchPlaylist = async (id: string) => {
-  const response = await spotifyApi.getPlaylist(id);
-  return response.body;
-};

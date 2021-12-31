@@ -9,21 +9,20 @@ import { AppRouter } from "@/server/router/app";
 import { withTRPC } from "@trpc/next";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-
   useFixMobileHeight();
 
   return (
     <SessionProvider session={session}>
       <RecoilRoot>
         <Component {...pageProps} />
-        <ReactQueryDevtools initialIsOpen={false} />     
+        <ReactQueryDevtools initialIsOpen={false} />
       </RecoilRoot>
     </SessionProvider>
-  )
+  );
 }
 
 export default withTRPC<AppRouter>({
-  config({ctx}) { 
+  config({ ctx }) {
     const url = process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}/api/trpc`
       : "http://localhost:3000/api/trpc";
@@ -37,4 +36,3 @@ export default withTRPC<AppRouter>({
    */
   ssr: false,
 })(MyApp);
-

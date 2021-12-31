@@ -50,9 +50,6 @@ const useSpotifyPlayTrack = () => {
         trackId: c.previousCurrentlyPlayingTrackId.trackId,
       });
     },
-    onSettled: () => {
-      utils.invalidateQueries(["track.currently-playing-id"]);
-    },
   });
 
   return mutateSpotifyPlayTrack;
