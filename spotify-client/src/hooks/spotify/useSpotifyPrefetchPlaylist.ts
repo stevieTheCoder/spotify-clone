@@ -9,7 +9,7 @@ const useSpotifyPrefetchPlaylist = () => {
       await utils.prefetchQuery(
         ["playlists.playlist-by-id", { playlistId: idToPrefetch }],
         {
-          staleTime: 60000,
+          staleTime: 1000 * 60 * 60, // 1 hour
         }
       );
     },

@@ -5,11 +5,10 @@ const useSpotifyTrackInfo = () => {
   const { data: currentlyPlayingTrackId } = useSpotifyGetCurrentlyPlaying();
 
   const queryTrackInfo = trpc.useQuery(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ["track.track-info", { trackId: currentlyPlayingTrackId?.trackId ?? "" }],
+    ["track.track-info", { trackId: currentlyPlayingTrackId?.trackId ?? "" }], // Won't be called with empty string due to enabled flag
     {
       enabled: !!currentlyPlayingTrackId?.trackId,
-      staleTime: 60000,
+      staleTime: Infinity,
     }
   );
 

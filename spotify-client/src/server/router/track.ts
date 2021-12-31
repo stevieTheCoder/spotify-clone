@@ -16,8 +16,8 @@ export const trackRouter = createRouter()
     async resolve(req) {
       const response = await spotifyApi.getTrack(req.input.trackId);
       return {
-        trackId: response.body.id,
-        albumSrc: response.body.album.images[0].url,
+        id: response.body.id,
+        albumImageSrc: response.body.album.images[0].url,
         artist: response.body.artists[0].name,
         name: response.body.name,
       };

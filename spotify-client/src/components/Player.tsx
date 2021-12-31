@@ -23,7 +23,7 @@ import PlayerButton from "./PlayerButton";
 import SkeletonPlayerTrackInfo from "./skeletons/SkeletonPlayerTrackInfo";
 
 const Player: React.FC = () => {
-  const { isIdle, data: trackInfo } = useSpotifyTrackInfo();
+  const { isLoading, isIdle, data: trackInfo } = useSpotifyTrackInfo();
 
   const { togglePlayPause, isPlaying } = useSpotifyTogglePlayPause();
 
@@ -47,7 +47,7 @@ const Player: React.FC = () => {
         <div className="flex items-center pt-2 space-x-4 md:pt-0">
           <div className="w-10 h-10">
             <Image
-              src={trackInfo.albumSrc}
+              src={trackInfo.albumImageSrc}
               alt="album art"
               width={40}
               height={40}
@@ -61,7 +61,7 @@ const Player: React.FC = () => {
       ) : isIdle ? (
         <div />
       ) : (
-        <SkeletonPlayerTrackInfo />
+        isLoading && <SkeletonPlayerTrackInfo />
       )}
 
       {/*Center */}
