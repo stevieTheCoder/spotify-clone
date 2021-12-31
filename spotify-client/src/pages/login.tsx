@@ -10,7 +10,7 @@ export const Login: React.FC = () => {
       </div>
 
       <button
-        className="w-52 bg-[#18D860] text-white p-5 rounded-full"
+        className="p-5 text-white rounded-full w-52 bg-spotifyGreen"
         onClick={() => signIn("spotify", { callbackUrl: "/" })}
       >
         Login with Spotify
