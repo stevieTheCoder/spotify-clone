@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { isMobile } from "react-device-detect";
 
 function useFixMobileHeight() {
   const setViewHeight = () => {
@@ -7,6 +8,8 @@ function useFixMobileHeight() {
   };
 
   useEffect(() => {
+    if (!isMobile) return;
+
     setViewHeight();
 
     window.addEventListener("resize", setViewHeight);
