@@ -10,6 +10,7 @@ import {
   VolumeUpIcon,
   SwitchHorizontalIcon,
 } from "@heroicons/react/solid";
+import Image from "next/image";
 
 import {
   useSpotifyTogglePlayPause,
@@ -30,7 +31,7 @@ const Player: React.FC = () => {
     error,
   } = useSpotifyTrackInfo();
 
-  const {togglePlayPause, isPlaying}= useSpotifyTogglePlayPause();
+  const { togglePlayPause, isPlaying } = useSpotifyTogglePlayPause();
 
   const {
     enabled: volumeEnabled,
@@ -48,20 +49,25 @@ const Player: React.FC = () => {
       </div>
 
       {/*Left */}
-      {isLoading ? (
-        <SkeletonPlayerTrackInfo />
-      ) : isIdle ? (
-        <div />
-      ) : isError ? (
-        <div>Error {error}</div>
-      ) : (
+      {trackInfo ? (
         <div className="flex items-center pt-2 space-x-4 md:pt-0">
-          <img className="w-10 h-10" src={trackInfo?.albumSrc} alt="album art" />
+          <div className="w-10 h-10">
+            <Image
+              src={trackInfo.albumSrc}
+              alt="album art"
+              width={40}
+              height={40}
+            />
+          </div>
           <div>
-            <h3>{trackInfo?.name}</h3>
-            <p className="text-gray-500">{trackInfo?.artist}</p>
+            <h3>{trackInfo.name}</h3>
+            <p className="text-gray-500">{trackInfo.artist}</p>
           </div>
         </div>
+      ) : isIdle ? (
+        <div />
+      ) : (
+        <SkeletonPlayerTrackInfo />
       )}
 
       {/*Center */}
@@ -72,10 +78,7 @@ const Player: React.FC = () => {
         <PlayerButton>
           <RewindIcon />
         </PlayerButton>
-        <PlayerButton
-          size={10}
-          onClick={() => togglePlayPause()}
-        >
+        <PlayerButton size={10} onClick={() => togglePlayPause()}>
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </PlayerButton>
         <PlayerButton>
@@ -106,6 +109,6 @@ const Player: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Player;
