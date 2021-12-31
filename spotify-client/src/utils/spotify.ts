@@ -33,14 +33,6 @@ export const signInSpotifyClientCredentialsFlow = async () => {
     const credentialResponse = await spotifyApi.clientCredentialsGrant();
 
     if (credentialResponse.statusCode === 200) {
-      console.log(
-        "The access token expires in " + credentialResponse.body.expires_in
-      );
-      console.log(
-        "The access token is " + credentialResponse.body.access_token
-      );
-
-      // Save the access token so that it's used in future calls
       spotifyApi.setAccessToken(credentialResponse.body.access_token);
     }
   } catch (err) {

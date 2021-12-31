@@ -23,13 +23,7 @@ import PlayerButton from "./PlayerButton";
 import SkeletonPlayerTrackInfo from "./skeletons/SkeletonPlayerTrackInfo";
 
 const Player: React.FC = () => {
-  const {
-    isIdle,
-    isLoading,
-    isError,
-    data: trackInfo,
-    error,
-  } = useSpotifyTrackInfo();
+  const { isIdle, data: trackInfo } = useSpotifyTrackInfo();
 
   const { togglePlayPause, isPlaying } = useSpotifyTogglePlayPause();
 

@@ -42,13 +42,13 @@ export default NextAuth({
       // Initial sign in
       if (account && user) {
         console.log(">> SIGN IN");
-        console.log("Account", account);
-        console.log("Token", token);
-        console.log("User", user);
+
         return {
           ...token,
           accessToken: account.access_token,
-          accessTokenExpires: account.expires_at! * 1000,
+          accessTokenExpires: account.expires_at
+            ? account.expires_at * 1000
+            : Date.now(),
           refreshToken: account.refresh_token,
           user,
         } as JWT;

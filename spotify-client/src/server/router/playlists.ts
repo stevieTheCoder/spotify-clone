@@ -6,7 +6,13 @@ export const playlistsRouter = createRouter()
   .query("user-playlists", {
     async resolve() {
       const response = await spotifyApi.getUserPlaylists();
-      return response.body.items;
+
+      const userPlaylists = response.body.items.map((i) => ({
+        id: i.id,
+        name: i.name,
+      }));
+
+      return userPlaylists;
     },
   })
   .query("playlist-by-id", {
@@ -16,27 +22,15 @@ export const playlistsRouter = createRouter()
         await spotifyApi.getPlaylist(req.input.playlistId)
       ).body;
 
-      const tracks: {
-        id: string;
-        uri: string;
-        albumImageSrc: string;
-        name: string;
-        artistName: string;
-        albumName: string;
-        duration: number;
-      }[] = [];
-
-      data.tracks.items.map((i) => {
-        tracks.push({
-          id: i.track.id,
-          uri: i.track.uri,
-          albumImageSrc: i.track.album.images?.[0]?.url ?? data.images[0].url, // Default to playlist image
-          name: i.track.name,
-          artistName: i.track.artists[0].name,
-          albumName: i.track.album.name,
-          duration: i.track.duration_ms,
-        });
-      });
+      const tracks = data.tracks.items.map((i) => ({
+        id: i.track.id,
+        uri: i.track.uri,
+        albumImageSrc: i.track.album.images?.[0]?.url ?? data.images[0].url, // Default to playlist image
+        name: i.track.name,
+        artistName: i.track.artists[0].name,
+        albumName: i.track.album.name,
+        duration: i.track.duration_ms,
+      }));
 
       return {
         ImageSrc: data.images[0].url,

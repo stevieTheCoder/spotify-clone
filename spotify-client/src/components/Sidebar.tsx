@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
         ) : isError ? (
           <span>Error {error}</span>
         ) : (
-          userPlaylists?.map((playlist: any) => {
+          userPlaylists?.map((playlist) => {
             return (
               <PlaylistName
                 key={playlist.id}
@@ -69,6 +69,6 @@ const Sidebar: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;
