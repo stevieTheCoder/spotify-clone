@@ -28,8 +28,8 @@ const refreshAccessToken = async (token: JWT) => {
 export default NextAuth({
   providers: [
     SpotifyProvider({
-      clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
-      clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
+      clientId: process.env.SPOTIFY_ID,
+      clientSecret: process.env.SPOTIFY_SECRET,
       authorization: LOGIN_URL,
     }),
   ],

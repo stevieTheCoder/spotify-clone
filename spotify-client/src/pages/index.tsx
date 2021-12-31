@@ -1,53 +1,63 @@
-import { getSession } from "next-auth/react";
 import Head from "next/head";
 import { useEffect } from "react";
-import { dehydrate, QueryClient } from "react-query";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
 import Center from "../components/Center";
 import Player from "../components/Player";
 import Sidebar from "../components/Sidebar";
-import spotifyApi, {
-  fetchFeaturedPlaylistId,
-  fetchPlaylist,
-} from "../utils/spotify";
+import spotifyApi from "../utils/spotify";
 import PropTypes from "prop-types";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
+import { createSSGHelpers} from "@trpc/react/ssg"
+import { appRouter, createContext } from "@/server/router/app";
 
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const queryClient = new QueryClient();
-  const req = context.req;
+export const getStaticProps: GetStaticProps = async () => {
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: await createContext(),
+  });
 
-  const session = await getSession({ req});
+  try {
+    const credentialResponse = await spotifyApi.clientCredentialsGrant();
+    
+    if (credentialResponse.statusCode === 200) {
+      console.log('The access token expires in ' + credentialResponse.body.expires_in);
+      console.log('The access token is ' + credentialResponse.body.access_token);
+    
+      // Save the access token so that it's used in future calls
+      spotifyApi.setAccessToken(credentialResponse.body.access_token);
+      } 
+    }
+  catch (err)
+  {
+    console.log('Something went wrong when retrieving an access token', err);
+  } 
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  spotifyApi.setAccessToken(session.accessToken);
+  
+  
+  const fetchFeaturedPlaylistId = async () => {
+    try {
+      const response = await spotifyApi.getFeaturedPlaylists({
+        limit: 1,
+        offset: 0,
+        country: "GB",
+      });
+  
+      return response.body.playlists.items[0].id;
+    } catch (err) {
+      console.log("Something went wrong!", err);
+    }
+  };
 
   const featuredPlaylistId = await fetchFeaturedPlaylistId();
 
-  if (featuredPlaylistId)
-  {
-    // Data will be available client side
-    await queryClient.prefetchQuery(
-      ["playlists", featuredPlaylistId],
-      () => fetchPlaylist(featuredPlaylistId),
-      {
-        staleTime: 60000,
-      }
-      );
-    }
+  if (featuredPlaylistId) {
+    await ssg.fetchQuery("playlists.playlist-by-id", { playlistId: featuredPlaylistId});
+  }
 
   return {
-    props: { dehydratedState: dehydrate(queryClient), featuredPlaylistId },
+    props: { trpcState: ssg.dehydrate(), featuredPlaylistId },
   };
 }
 

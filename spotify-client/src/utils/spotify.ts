@@ -24,27 +24,13 @@ const queryParamString = new URLSearchParams(params);
 const LOGIN_URL = `https://accounts.spotify.com/authorize?${queryParamString.toString()}`;
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: process.env.NEXT_PUBLIC_CLIENT_ID,
-  clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
+  clientId: process.env.SPOTIFY_ID,
+  clientSecret: process.env.SPOTIFY_SECRET,
 });
 
 export default spotifyApi;
 
 export { LOGIN_URL };
-
-export const fetchFeaturedPlaylistId = async () => {
-  try {
-    const response = await spotifyApi.getFeaturedPlaylists({
-      limit: 1,
-      offset: 0,
-      country: "GB",
-    });
-
-    return response.body.playlists.items[0].id;
-  } catch (err) {
-    console.log("Something went wrong!", err);
-  }
-};
 
 export const fetchPlaylist = async (id: string) => {
   const response = await spotifyApi.getPlaylist(id);
