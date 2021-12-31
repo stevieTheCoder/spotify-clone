@@ -21,20 +21,21 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   );
 }
 
-export default withTRPC<AppRouter>({
-  config({ ctx }) {
-    const url = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}/api/trpc`
-      : "http://localhost:3000/api/trpc";
+const getBaseUrl = () => {
+  if (process.browser) return ""; // Broswer should use current path
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
 
-    console.log("GOT UTL AS", url);
+  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
+};
+
+export default withTRPC<AppRouter>({
+  config() {
+    const url = `${getBaseUrl()}/api/trpc`;
 
     return {
       url,
     };
   },
-  /**
-   * @link https://trpc.io/docs/ssr
-   */
+
   ssr: false,
 })(MyApp);
