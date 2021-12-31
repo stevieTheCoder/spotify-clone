@@ -11,7 +11,13 @@ const defaultUserImage =
   "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80";
 
 const Center: React.FC = () => {
-  const { isLoading, isIdle, isError, data: playlist, error } = useSpotifySelectedPlaylist();
+  const {
+    isLoading,
+    isIdle,
+    isError,
+    data: playlist,
+    error,
+  } = useSpotifySelectedPlaylist();
   const { data: session } = useSession();
   const [colour, setColor] = useState<string | null>(null);
 
@@ -38,10 +44,7 @@ const Center: React.FC = () => {
           <SkeletonHeaderSection />
         ) : (
           <>
-            <img
-              className="shadow-2xl h-44 w-44"
-              src={playlist?.images[0].url}
-            />
+            <img className="shadow-2xl h-44 w-44" src={playlist?.ImageSrc} />
             <div>
               <p>PLAYLIST</p>
               <h2 className="text-2xl font-bold md:text-3xl xl:text-5xl">
@@ -63,6 +66,6 @@ const Center: React.FC = () => {
       )}
     </div>
   );
-}
+};
 
 export default Center;

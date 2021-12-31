@@ -27,7 +27,7 @@
     "types/next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/hooks/spotify/useSpotifyPrefetchPlaylist.js"  ],
+, "src/hooks/spotify/useSpotifyPrefetchPlaylist.js", "next.config.js", "next.congif.js"  ],
   "exclude": [
     "node_modules"
   ]

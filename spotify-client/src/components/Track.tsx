@@ -5,12 +5,16 @@ import {
 import millisecondsToMinutesAndSeconds from "../utils/time";
 import useLongHover from "../hooks/useLongHover";
 import { useRef } from "react";
-import PropTypes from "prop-types";
+import { inferQueryResponse } from "@/utils/trpc";
+import Image from "next/image";
 
-interface Props {
-  order: number,
-  track: any
-}
+type TrackFromServer = inferQueryResponse<"playlists.playlist-by-id">;
+type TrackType = TrackFromServer["tracks"][0];
+
+type Props = {
+  order: number;
+  track: TrackType;
+};
 
 const Track: React.FC<Props> = ({ order, track }) => {
   const elementRef = useRef(null);
@@ -28,27 +32,25 @@ const Track: React.FC<Props> = ({ order, track }) => {
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>
-        <img
-          className="w-10 h-10"
-          src={track?.album.images[0]?.url}
-          alt="album art"
-        />
+        <div>
+          <Image
+            height={40}
+            width={40}
+            src={track.albumImageSrc}
+            alt="album art"
+          />
+        </div>
         <div>
           <p className="text-white truncate w-36 lg:w-64">{track.name}</p>
-          <p className="w-40">{track.artists[0].name}</p>
+          <p className="w-40">{track.artistName}</p>
         </div>
       </div>
       <div className="flex items-center justify-between ml-auto md:ml-0 ">
-        <p className="hidden w-40 md:inline">{track?.album.name}</p>
-        <p>{millisecondsToMinutesAndSeconds(track.duration_ms)}</p>
+        <p className="hidden w-40 md:inline">{track.albumName}</p>
+        <p>{millisecondsToMinutesAndSeconds(track.duration)}</p>
       </div>
     </div>
   );
-}
-
-Track.propTypes = {
-  order: PropTypes.number.isRequired,
-  track: PropTypes.object.isRequired,
 };
 
 export default Track;
