@@ -5,8 +5,10 @@ import { playlistIdState } from "../atoms/playlistAtom";
 import Center from "../components/Center";
 import Player from "../components/Player";
 import Sidebar from "../components/Sidebar";
-import spotifyApi from "../utils/spotify";
-import PropTypes from "prop-types";
+import {
+  fetchFeaturedPlaylistId,
+  signInSpotifyClientCredentialsFlow,
+} from "../utils/spotify";
 import { GetStaticProps } from "next";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import { appRouter, createContext } from "@/server/router/app";
@@ -42,52 +44,18 @@ const Home: React.FC<Props> = ({ featuredPlaylistId }) => {
   );
 };
 
-Home.propTypes = {
-  featuredPlaylistId: PropTypes.string,
-};
-
 export const getStaticProps: GetStaticProps = async () => {
   const ssg = createSSGHelpers({
     router: appRouter,
     ctx: await createContext(),
   });
 
-  try {
-    const credentialResponse = await spotifyApi.clientCredentialsGrant();
-
-    if (credentialResponse.statusCode === 200) {
-      console.log(
-        "The access token expires in " + credentialResponse.body.expires_in
-      );
-      console.log(
-        "The access token is " + credentialResponse.body.access_token
-      );
-
-      // Save the access token so that it's used in future calls
-      spotifyApi.setAccessToken(credentialResponse.body.access_token);
-    }
-  } catch (err) {
-    console.log("Something went wrong when retrieving an access token", err);
-  }
-
-  const fetchFeaturedPlaylistId = async () => {
-    try {
-      const response = await spotifyApi.getFeaturedPlaylists({
-        limit: 1,
-        offset: 0,
-        country: "GB",
-      });
-
-      return response.body.playlists.items[0].id;
-    } catch (err) {
-      console.log("Something went wrong!", err);
-    }
-  };
+  await signInSpotifyClientCredentialsFlow();
 
   const featuredPlaylistId = await fetchFeaturedPlaylistId();
 
   if (featuredPlaylistId) {
-    await ssg.fetchQuery("playlists.playlist-by-id", {
+    await ssg.prefetchQuery("playlists.playlist-by-id", {
       playlistId: featuredPlaylistId,
     });
   }

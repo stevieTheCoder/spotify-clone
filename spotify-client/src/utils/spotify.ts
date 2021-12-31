@@ -28,6 +28,40 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.SPOTIFY_SECRET,
 });
 
+export const signInSpotifyClientCredentialsFlow = async () => {
+  try {
+    const credentialResponse = await spotifyApi.clientCredentialsGrant();
+
+    if (credentialResponse.statusCode === 200) {
+      console.log(
+        "The access token expires in " + credentialResponse.body.expires_in
+      );
+      console.log(
+        "The access token is " + credentialResponse.body.access_token
+      );
+
+      // Save the access token so that it's used in future calls
+      spotifyApi.setAccessToken(credentialResponse.body.access_token);
+    }
+  } catch (err) {
+    console.log("Something went wrong when retrieving an access token", err);
+  }
+};
+
+export const fetchFeaturedPlaylistId = async () => {
+  try {
+    const response = await spotifyApi.getFeaturedPlaylists({
+      limit: 1,
+      offset: 0,
+      country: "GB",
+    });
+
+    return response.body.playlists.items[0].id;
+  } catch (err) {
+    console.log("Something went wrong!", err);
+  }
+};
+
 export default spotifyApi;
 
 export { LOGIN_URL };

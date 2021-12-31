@@ -1,25 +1,17 @@
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useSpotifySelectedPlaylist } from "../hooks/spotify";
 import Tracks from "./Tracks";
 import UserHeader from "./UserHeader";
 import { SkeletonHeaderSection, SkeletonTracks } from "./skeletons";
 import Image from "next/image";
-import spotifyLogo from "/public/spotify.png";
 
 const Center: React.FC = () => {
   const { data: playlist } = useSpotifySelectedPlaylist();
-  const { data: session } = useSession();
-
-  const userImage = session?.user?.image ?? spotifyLogo;
 
   return (
     <div className="relative flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
-        <UserHeader
-          name={session?.user?.name ?? ""}
-          image={userImage}
-          onClick={signOut}
-        />
+        <UserHeader onClick={signOut} />
       </header>
 
       <section
