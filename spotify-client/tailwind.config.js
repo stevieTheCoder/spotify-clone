@@ -16,8 +16,10 @@ module.exports = {
       full: "100%",
       screen: "calc(var(--vh) * 100)",
     }),
-    colors: {
-      spotifyGreen: "#18D860",
+    extends: {
+      colors: {
+        spotifyGreen: "#18D860",
+      },
     },
   },
   plugins: [require("tailwind-scrollbar-hide")],

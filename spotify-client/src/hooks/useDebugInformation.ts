@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef } from "react";
 import useRenderCount from "./useRenderCount";
 
-export default function useDebugInformation(componentName, props) {
+export default function useDebugInformation(componentName: string, props: any) {
   const count = useRenderCount();
   const changedProps = useRef({});
   const previousProps = useRef(props);

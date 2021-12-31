@@ -6,12 +6,12 @@ import PropTypes from "prop-types";
 import { useSpotifyPrefetchPlaylist } from "../hooks/spotify";
 
 interface Props {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
 
 const PlaylistName: React.FC<Props> = ({ id, name }) => {
-  const elementRef = useRef(null);
+  const elementRef = useRef<HTMLParagraphElement>(null);
   const [, setPlaylistId] = useRecoilState(playlistIdState);
   const prefetchPlaylist = useSpotifyPrefetchPlaylist();
   useLongHover(elementRef, async () => await prefetchPlaylist(id));
