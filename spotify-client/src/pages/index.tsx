@@ -62,6 +62,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: { trpcState: ssg.dehydrate(), featuredPlaylistId },
+    revalidate: 60 * 60, // 1 hour
   };
 };
 
