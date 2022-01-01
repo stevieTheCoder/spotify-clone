@@ -6,7 +6,7 @@ import { SkeletonHeaderSection, SkeletonTracks } from "./skeletons";
 import Image from "next/image";
 
 const Center: React.FC = () => {
-  const { data: playlist } = useSpotifySelectedPlaylist();
+  const { data: playlist, error } = useSpotifySelectedPlaylist();
 
   return (
     <div className="relative col-span-12 overflow-y-scroll md:col-span-9 lg:col-span-10 scrollbar-hide">
@@ -34,15 +34,17 @@ const Center: React.FC = () => {
               </h2>
             </div>
           </>
+        ) : error ? (
+          "An error has occured: " + error.message
         ) : (
-          <SkeletonHeaderSection />
+          <SkeletonHeaderSection /> // Loading
         )}
       </section>
       <section>
         {playlist?.tracks ? (
           <Tracks tracks={playlist.tracks} />
-        ) : (
-          <SkeletonTracks />
+        ) : error ? null : (
+          <SkeletonTracks /> // Loading
         )}
       </section>
     </div>
