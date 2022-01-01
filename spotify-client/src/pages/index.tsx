@@ -26,7 +26,7 @@ const Home: React.FC<Props> = ({ featuredPlaylistId }) => {
   }, [featuredPlaylistId, setPlaylistId]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-black">
+    <div className="w-full min-h-full overflow-hidden bg-black">
       <Head>
         <title>Spotify</title>
         <link rel="icon" href="/favicon.ico" />
