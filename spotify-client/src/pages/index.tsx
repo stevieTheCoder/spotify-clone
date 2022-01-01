@@ -32,12 +32,12 @@ const Home: React.FC<Props> = ({ featuredPlaylistId }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex">
+      <main className="grid grid-cols-12">
         <Sidebar />
         <Center />
       </main>
 
-      <div className="sticky bottom-0">
+      <div className="fixed bottom-0 w-full">
         <Player />
       </div>
     </div>

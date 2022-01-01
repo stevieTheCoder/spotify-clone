@@ -9,7 +9,7 @@ const Center: React.FC = () => {
   const { data: playlist } = useSpotifySelectedPlaylist();
 
   return (
-    <div className="relative flex-grow h-screen overflow-y-scroll scrollbar-hide">
+    <div className="relative col-span-12 overflow-y-scroll md:col-span-9 lg:col-span-10 scrollbar-hide">
       <header className="absolute top-5 right-8">
         <UserHeader onClick={signOut} />
       </header>
@@ -38,12 +38,13 @@ const Center: React.FC = () => {
           <SkeletonHeaderSection />
         )}
       </section>
-
-      {playlist?.tracks ? (
-        <Tracks tracks={playlist.tracks} />
-      ) : (
-        <SkeletonTracks />
-      )}
+      <section>
+        {playlist?.tracks ? (
+          <Tracks tracks={playlist.tracks} />
+        ) : (
+          <SkeletonTracks />
+        )}
+      </section>
     </div>
   );
 };
