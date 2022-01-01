@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const featuredPlaylistId = await fetchFeaturedPlaylistId();
 
   if (featuredPlaylistId) {
-    await ssg.prefetchQuery("playlists.playlist-by-id", {
+    await ssg.fetchQuery("playlists.playlist-by-id", {
       playlistId: featuredPlaylistId,
     });
   }
