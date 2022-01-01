@@ -1,15 +1,11 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import { isMobile } from "react-device-detect";
+
 import spotifyLogo from "/public/spotify.png";
 
 export const Login: React.FC = () => {
   return (
-    <div
-      className={`flex flex-col items-center justify-center w-full bg-black ${
-        isMobile ? "min-h-screenCalculated" : "min-h-screen"
-      }`}
-    >
+    <div className="absolute inset-0 flex flex-col items-center justify-center w-full bg-black">
       <div className="mb-5">
         <Image src={spotifyLogo} alt="spotify logo"></Image>
       </div>
