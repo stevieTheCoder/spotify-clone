@@ -6,7 +6,7 @@ import spotifyLogo from "/public/spotify.png";
 export const Login: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-full bg-black ">
-      <div className="mb-5">
+      <div className="mb-5 w-52 h-52">
         <Image src={spotifyLogo} alt="spotify logo"></Image>
       </div>
 

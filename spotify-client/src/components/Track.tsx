@@ -32,7 +32,7 @@ const Track: React.FC<Props> = ({ order, track }) => {
     >
       <div className="flex items-center space-x-4">
         <p>{order + 1}</p>
-        <div>
+        <div className="flex-shrink-0">
           <Image
             height={40}
             width={40}
